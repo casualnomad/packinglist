@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vietnam Packing List</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c24;
+    --surface2: #1e2330;
+    --border: #2a2f3d;
+    --accent: #f4a622;
+    --accent2: #e8623a;
+    --green: #4ecb71;
+    --text: #e8e4dc;
+    --muted: #6b7280;
+    --tag-bg: #252b38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px 0;
+  }
+
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, #1a0a00 0%, #0f1117 50%, #0a1520 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 32px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(244,166,34,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: 'VIỆT NAM';
+    position: absolute;
+    bottom: -20px; right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: rgba(244,166,34,0.05);
+    letter-spacing: 8px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hero-inner { max-width: 760px; margin: 0 auto; }
+  .trip-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(244,166,34,0.12);
+    border: 1px solid rgba(244,166,34,0.3);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 84px);
+    letter-spacing: 3px;
+    line-height: 0.9;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .hero-meta strong { color: var(--text); }
+
+  /* Progress bar */
+  .progress-bar {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 32px;
+    margin-top: -1px;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .progress-label strong { color: var(--accent); }
+
+  /* Main content */
+  .main { max-width: 760px; margin: 0 auto; padding: 40px 32px 0; }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .section-count {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Item */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+    user-select: none;
+  }
+  .item:hover { background: var(--surface); }
+  .item.checked { opacity: 0.5; }
+  .item.checked .item-name { text-decoration: line-through; text-decoration-color: var(--muted); }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: transparent;
+  }
+  .item.checked .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .item.checked .checkbox::after {
+    content: '';
+    width: 10px; height: 6px;
+    border-left: 2px solid #0f1117;
+    border-bottom: 2px solid #0f1117;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+  .item.owned .checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .item.owned .checkbox::after {
+    content: '';
+    width: 10px; height: 6px;
+    border-left: 2px solid #0f1117;
+    border-bottom: 2px solid #0f1117;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  .item-content { flex: 1; min-width: 0; }
+  .item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .item-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .item-badges { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+  .badge-owned { background: rgba(244,166,34,0.15); color: var(--accent); border: 1px solid rgba(244,166,34,0.3); }
+  .badge-key { background: rgba(232,98,58,0.15); color: var(--accent2); border: 1px solid rgba(232,98,58,0.3); }
+  .badge-buy { background: rgba(107,114,128,0.15); color: var(--muted); border: 1px solid var(--border); }
+  .badge-vietnam { background: rgba(78,203,113,0.1); color: var(--green); border: 1px solid rgba(78,203,113,0.3); }
+
+  /* Footer note */
+  .footer-note {
+    margin-top: 48px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .footer-note strong { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 36px 20px 28px; }
+    .hero::after { font-size: 70px; }
+    .main { padding: 28px 20px 0; }
+    .progress-bar { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="trip-tag">🎒 One Bag · Kathmandu Trailhead 35L</div>
+    <h1>VIETNAM<br><span>PACK LIST</span></h1>
+    <div class="hero-meta">
+      <span>📍 <strong>HCMC → Hanoi</strong></span>
+      <span>📅 <strong>Mar – Apr · 4 weeks</strong></span>
+      <span>🏍️ <strong>Intrepid Basix + moto tour</strong></span>
+      <span>⛵ <strong>Cat Ba cruise</strong></span>
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span>Packed <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
+    <span id="progressPct" style="color: var(--accent)">0%</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CLOTHING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👕</div>
+      <div class="section-title">Clothing</div>
+      <div class="section-count" id="count-clothing"></div>
+    </div>
+
+    <div class="item owned" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Macpac Men's brrr° T-Shirt (×1)</div>
+        <div class="item-note">Polygiene StayFresh + brrr° cooling — your benchmark tee. Get 1–2 more like this.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Synthetic / Polygiene T-shirts (×2 more)</div>
+        <div class="item-note">Match your brrr° tee — quick-dry, Polygiene treated. Aim for 3 tees total for rotation.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Long-sleeve shirt (×1)</div>
+        <div class="item-note">Merino or merino-blend. Temple visits, overnight trains, Hanoi evenings. Wears 2–3 days without washing.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Travel pants (×1)</div>
+        <div class="item-note">Slim chino or lightweight hiking style. Not cargo — too bulky. Covers temples, cities, Pu Luong trek.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Swim shorts / board shorts (×1)</div>
+        <div class="item-note">Doubles as casual shorts. Cat Ba beach, Lan Ha Bay kayaking, Mekong boat day.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Underwear — quick-dry (×4)</div>
+        <div class="item-note">Merino or synthetic. ExOfficio or similar. Sink-wash and overnight dry.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="clothing" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Socks — lightweight (×3 pairs)</div>
+        <div class="item-note">No-show or ankle. Darn Tough or merino blend. One for trail runners, one for sandals, one spare.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JACKET & LAYER -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🧥</div>
+      <div class="section-title">Jacket & Layers</div>
+      <div class="section-count" id="count-jacket"></div>
+    </div>
+
+    <div class="item owned" data-section="jacket" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Kathmandu Andulo 2-layer Rain Jacket</div>
+        <div class="item-note">Waterproof, windproof, breathable. Hai Van Pass moto section, overnight train AC, northern Vietnam rain.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="jacket" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Buff / Neck Gaiter (×1)</div>
+        <div class="item-note">Moto tour dust + sun protection. Doubles as a light sleep layer on trains.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTWEAR -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👟</div>
+      <div class="section-title">Footwear</div>
+      <div class="section-count" id="count-footwear"></div>
+    </div>
+
+    <div class="item" data-section="footwear" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Trail runners or walking shoes (×1)</div>
+        <div class="item-note">Covers Pu Luong trek, Hoi An bike ride, city walking, motorbike tour (closed-toe required). Wear on the plane.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="footwear" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Sandals — Teva / Chaco style (×1)</div>
+        <div class="item-note">Cat Ba beach, boat days, casual city wandering, homestay showers.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📱</div>
+      <div class="section-title">Tech & Electronics</div>
+      <div class="section-count" id="count-tech"></div>
+    </div>
+
+    <div class="item owned" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">iPhone 16</div>
+        <div class="item-note">Your camera. Get a case with a wrist loop — bag-snatching on scooters is real in HCMC.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item owned" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Belkin Boostcharge Pro 20,000mAh</div>
+        <div class="item-note">Carry-on only — never checked luggage. ~5 full iPhone charges. Overkill but fine.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
+      </div>
+    </div>
+
+    <div class="item owned" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">AirPods Pro 3</div>
+        <div class="item-note">ANC is a lifesaver on the 19-hour overnight train. Leave the Soundcore A20 at home — no need for both.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item owned" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Head Torch</div>
+        <div class="item-note">Pu Luong homestay, Cat Ba evening beach, basic hotel hallways. Keep it.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Universal power adapter (Type A/C, two-pin)</div>
+        <div class="item-note">Vietnam uses Type A and C plugs. A compact universal adapter covers all bases.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="tech" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Charging cable(s)</div>
+        <div class="item-note">USB-C for iPhone 16 + powerbank. One braided cable is enough if it's quality.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAGS & ORGANISATION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-title">Bags & Organisation</div>
+      <div class="section-count" id="count-bags"></div>
+    </div>
+
+    <div class="item owned" data-section="bags" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Packing cubes (fitted for Trailhead 35L)</div>
+        <div class="item-note">Keep tomorrow's outfit + rain jacket accessible on top. One cube clothes, one tech/cables.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="bags" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Small dry bag or waterproof phone pouch</div>
+        <div class="item-note">Essential for Lan Ha Bay kayaking, Mekong boat day, and Cat Ba beach. 5–10L is plenty.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="bags" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Small crossbody / day bag</div>
+        <div class="item-note">For city days when you don't want the full 35L on your back. Keeps your phone + wallet secure.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLEEP & COMFORT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛏️</div>
+      <div class="section-title">Sleep & Comfort</div>
+      <div class="section-count" id="count-sleep"></div>
+    </div>
+
+    <div class="item" data-section="sleep" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Silk or lightweight sleep liner</div>
+        <div class="item-note">Intrepid specifically recommends this for the overnight trains. Packs tiny. Game changer for comfort.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item owned" data-section="sleep" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Microfibre travel towel</div>
+        <div class="item-note">Cat Ba beach, Lan Ha Bay boat day, Mekong homestay. Make sure it's compact — Sea to Summit Airlite style.</div>
+        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEALTH & TOILETRIES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💊</div>
+      <div class="section-title">Health & Toiletries</div>
+      <div class="section-count" id="count-health"></div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Sunscreen — solid stick</div>
+        <div class="item-note">Doesn't count as liquid. Vietnam sun is brutal March–April. Restock easily in country.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">DEET insect repellent</div>
+        <div class="item-note">Non-negotiable for Pu Luong and the Mekong Delta. Buy full size in Vietnam — cheap and strong.</div>
+        <div class="item-badges"><span class="badge badge-vietnam">Buy in Vietnam</span><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Basic first aid kit</div>
+        <div class="item-note">Blister pads (Hoi An bike day), antihistamines, electrolytes, imodium, paracetamol.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Solid toiletries (shampoo bar, soap)</div>
+        <div class="item-note">No liquid limits. Lush or similar. Compact and lasts the trip. Laundry bar too — Sard or similar.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Hand sanitiser (small)</div>
+        <div class="item-note">Street food and markets. Small bottle — buy backup in Vietnam at any 7-Eleven.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="health" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Toothbrush + toothpaste (travel size)</div>
+        <div class="item-note">Obvious, but easy to forget to pack small.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📄</div>
+      <div class="section-title">Documents & Money</div>
+      <div class="section-count" id="count-docs"></div>
+    </div>
+
+    <div class="item" data-section="docs" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Passport (valid 6+ months beyond travel)</div>
+        <div class="item-note">Vietnam requires 6 months validity. Check now.</div>
+        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="docs" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Vietnam e-Visa</div>
+        <div class="item-note">Apply online at evisa.xuatnhapcanh.gov.vn. NZ citizens — 90-day single entry available.</div>
+        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="docs" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Travel insurance docs</div>
+        <div class="item-note">Intrepid requires proof at welcome meeting. Print or have offline on phone.</div>
+        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
+      </div>
+    </div>
+
+    <div class="item" data-section="docs" onclick="toggle(this)">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-name">Travel card / low-fee debit card</div>
+        <div class="item-note">Wise or Revolut. Vietnam is still largely cash — ATMs everywhere, but use your card to withdraw VND.</div>
+        <div class="item-badges"><span class="badge badge-buy">To Get</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <strong>💡 Pro Tips</strong><br>
+    <strong>Laundry:</strong> USD 1–2/kg everywhere. Wash every 3–5 days — no need to overpack clothes.<br>
+    <strong>Hoi An tailors:</strong> Budget bag space coming home if you get anything made — it's worth it.<br>
+    <strong>Leave the Soundcore A20 at home</strong> — AirPods Pro 3 does everything better.<br>
+    <strong>Buying in Vietnam:</strong> DEET, sunscreen backup, snacks, SIM card — all cheap and easy at 7-Eleven.
+  </div>
+
+</div>
+
+<script>
+  function toggle(el) {
+    if (el.classList.contains('owned')) {
+      // owned items toggle between owned-checked and owned
+      if (el.classList.contains('checked')) {
+        el.classList.remove('checked');
+      } else {
+        el.classList.add('checked');
+      }
+    } else {
+      el.classList.toggle('checked');
+    }
+    updateProgress();
+    updateCounts();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.item');
+    const checked = document.querySelectorAll('.item.checked');
+    const total = all.length;
+    const done = checked.length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('packedCount').textContent = done;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function updateCounts() {
+    const sections = ['clothing','jacket','footwear','tech','bags','sleep','health','docs'];
+    sections.forEach(s => {
+      const items = document.querySelectorAll(`[data-section="${s}"]`);
+      const checked = document.querySelectorAll(`[data-section="${s}"].checked`);
+      const el = document.getElementById('count-' + s);
+      if (el) el.textContent = checked.length + ' / ' + items.length;
+    });
+  }
+
+  // Pre-tick all owned items on load
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.item.owned').forEach(el => el.classList.add('checked'));
+    updateProgress();
+    updateCounts();
+  });
+</script>
+
+</body>
+</html>
