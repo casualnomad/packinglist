@@ -7,520 +7,157 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #181c24;
-    --surface2: #1e2330;
-    --border: #2a2f3d;
-    --accent: #f4a622;
-    --accent2: #e8623a;
-    --green: #4ecb71;
-    --red: #e84f4f;
-    --text: #e8e4dc;
-    --muted: #6b7280;
-    --tag-bg: #252b38;
+    --bg: #0f1117; --surface: #181c24; --border: #2a2f3d;
+    --accent: #f4a622; --accent2: #e8623a; --green: #4ecb71;
+    --red: #e84f4f; --text: #e8e4dc; --muted: #6b7280; --tag-bg: #252b38;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 100px; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    padding-bottom: 100px;
-  }
-
-  /* ── SETUP SCREEN ── */
+  /* ── SETUP ── */
   #setup-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;
     background: radial-gradient(ellipse at 30% 20%, rgba(244,166,34,0.08) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 80%, rgba(232,98,58,0.06) 0%, transparent 50%);
   }
-
-  .setup-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 48px;
-    max-width: 560px;
-    width: 100%;
+  .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 48px; max-width: 560px; width: 100%; }
+  .setup-logo { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; color: var(--accent); margin-bottom: 4px; }
+  .setup-sub { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  .ai-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.1); border: 1px solid rgba(244,166,34,0.25); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; padding: 4px 10px; border-radius: 3px; margin-bottom: 28px; }
+  .setup-field { margin-bottom: 18px; }
+  .setup-field label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+  .setup-field input, .setup-field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 10px 14px;
+    outline: none; transition: border-color 0.15s; resize: vertical;
   }
-
-  .setup-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .setup-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 36px;
-  }
-
-  .setup-field { margin-bottom: 20px; }
-  .setup-field label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  .setup-field input, .setup-field select {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 10px 14px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .setup-field input:focus, .setup-field select:focus {
-    border-color: var(--accent);
-  }
-  .setup-field input::placeholder { color: var(--muted); }
-
-  .setup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-  .meta-fields { margin-top: 8px; }
-  .meta-tag-input {
-    display: flex; gap: 8px; margin-bottom: 8px;
-  }
-  .meta-tag-input input {
-    flex: 1;
-  }
+  .setup-field input:focus, .setup-field textarea:focus { border-color: var(--accent); }
+  .setup-field input::placeholder, .setup-field textarea::placeholder { color: var(--muted); }
+  .setup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .meta-tag-input { display: flex; gap: 8px; margin-bottom: 8px; }
+  .meta-tag-input input { flex: 1; }
   .meta-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .meta-tag {
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(244,166,34,0.12);
-    border: 1px solid rgba(244,166,34,0.25);
-    color: var(--accent);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-  }
+  .meta-tag { display: flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.12); border: 1px solid rgba(244,166,34,0.25); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 11px; padding: 3px 10px; border-radius: 3px; cursor: pointer; }
   .meta-tag .remove { opacity: 0.6; font-size: 13px; }
   .meta-tag:hover .remove { opacity: 1; }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--accent);
-    color: #0f1117;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-  }
+  /* ── GENERATING ── */
+  #generating-screen { display: none; min-height: 100vh; align-items: center; justify-content: center; padding: 40px 20px; }
+  .gen-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 48px; max-width: 480px; width: 100%; text-align: center; }
+  .gen-spinner { width: 52px; height: 52px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 28px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .gen-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 3px; margin-bottom: 6px; }
+  .gen-dest { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); margin-bottom: 32px; }
+  .gen-steps { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .gen-step { display: flex; align-items: center; gap: 12px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); transition: color 0.3s; }
+  .gen-step.active { color: var(--accent); }
+  .gen-step.done { color: var(--green); }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
+  .gen-step.active .step-dot { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+  .gen-step.done .step-dot { background: var(--green); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .gen-error { background: rgba(232,79,79,0.08); border: 1px solid rgba(232,79,79,0.3); border-radius: 8px; padding: 16px; color: #f87171; font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.7; margin-top: 24px; text-align: left; display: none; }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #0f1117; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; letter-spacing: 1px; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
   .btn:hover { opacity: 0.9; transform: translateY(-1px); }
   .btn:active { transform: translateY(0); }
-  .btn-outline {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    font-size: 12px;
-    padding: 10px 16px;
-  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); font-size: 12px; padding: 10px 16px; }
   .btn-outline:hover { color: var(--text); border-color: var(--text); opacity: 1; }
   .btn-sm { padding: 8px 14px; font-size: 11px; }
-  .btn-danger { background: var(--red); color: #fff; }
 
-  /* ── MAIN APP ── */
+  /* ── HERO ── */
   #app { display: none; }
-
-  .hero {
-    background: linear-gradient(135deg, #1a0a00 0%, #0f1117 50%, #0a1520 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 48px 32px 36px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -80px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(244,166,34,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-bg-text {
-    position: absolute;
-    bottom: -20px; right: 24px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 120px;
-    color: rgba(244,166,34,0.05);
-    letter-spacing: 8px;
-    pointer-events: none;
-    user-select: none;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 80%;
-    text-overflow: clip;
-  }
-
+  .hero { background: linear-gradient(135deg, #1a0a00 0%, #0f1117 50%, #0a1520 100%); border-bottom: 1px solid var(--border); padding: 48px 32px 36px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(244,166,34,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-bg-text { position: absolute; bottom: -20px; right: 24px; font-family: 'Bebas Neue', sans-serif; font-size: 120px; color: rgba(244,166,34,0.05); letter-spacing: 8px; pointer-events: none; user-select: none; white-space: nowrap; overflow: hidden; max-width: 80%; }
   .hero-inner { max-width: 760px; margin: 0 auto; }
-  .trip-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(244,166,34,0.12);
-    border: 1px solid rgba(244,166,34,0.3);
-    color: var(--accent);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 2px;
-    margin-bottom: 16px;
-  }
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 8vw, 84px);
-    letter-spacing: 3px;
-    line-height: 0.9;
-    color: var(--text);
-    margin-bottom: 16px;
-  }
+  .trip-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.12); border: 1px solid rgba(244,166,34,0.3); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 84px); letter-spacing: 3px; line-height: 0.9; color: var(--text); margin-bottom: 16px; }
   .hero h1 span { color: var(--accent); }
-  .hero-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 20px;
-  }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 20px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 20px; }
   .hero-meta span { display: flex; align-items: center; gap: 6px; }
   .hero-meta strong { color: var(--text); }
+  .hero-actions { margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap; }
 
-  .hero-actions {
-    margin-top: 24px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  /* Progress */
-  .progress-bar {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
-  .progress-track {
-    height: 3px;
-    background: var(--border);
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent2), var(--accent));
-    transition: width 0.4s ease;
-  }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 8px;
-  }
+  /* ── PROGRESS ── */
+  .progress-bar { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+  .progress-track { height: 3px; background: var(--border); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition: width 0.4s ease; }
+  .progress-label { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 8px; }
   .progress-label strong { color: var(--accent); }
 
-  /* Main */
+  /* ── MAIN ── */
   .main { max-width: 760px; margin: 0 auto; padding: 40px 32px 0; }
+  .notice-bar { max-width: 760px; margin: 20px auto 0; padding: 0 32px; }
+  .notice { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 14px 16px; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.6; }
+  .notice strong { color: var(--text); }
 
-  /* Add item bar */
-  .add-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 32px;
-  }
-  .add-bar-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
+  /* Add bar */
+  .add-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 32px; }
+  .add-bar-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
   .add-bar-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .add-bar input, .add-bar select {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 8px 12px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+  .add-bar input, .add-bar select { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 8px 12px; outline: none; transition: border-color 0.15s; }
   .add-bar input:focus, .add-bar select:focus { border-color: var(--accent); }
   .add-bar input::placeholder { color: var(--muted); }
   .add-bar input.item-name-input { flex: 1; min-width: 160px; }
   .add-bar input.item-note-input { flex: 1.5; min-width: 160px; }
   .add-bar select { min-width: 130px; }
 
-  /* Section */
+  /* Sections */
   .section { margin-bottom: 36px; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-icon {
-    width: 28px; height: 28px;
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 2px;
-  }
-  .section-count {
-    margin-left: auto;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .section-icon { width: 28px; height: 28px; background: var(--tag-bg); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; }
+  .section-count { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
-  /* Item */
-  .item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    margin-bottom: 2px;
-    transition: background 0.15s;
-    group: true;
-  }
+  /* Items */
+  .item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: 6px; margin-bottom: 2px; transition: background 0.15s; }
   .item:hover { background: var(--surface); }
   .item:hover .item-delete { opacity: 1; }
   .item.checked { opacity: 0.45; }
   .item.checked .item-name { text-decoration: line-through; text-decoration-color: var(--muted); }
-
-  .checkbox {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border);
-    border-radius: 3px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    cursor: pointer;
-  }
-  .item.checked .checkbox {
-    background: var(--green);
-    border-color: var(--green);
-  }
-  .item.checked .checkbox::after {
-    content: '';
-    width: 10px; height: 6px;
-    border-left: 2px solid #0f1117;
-    border-bottom: 2px solid #0f1117;
-    transform: rotate(-45deg) translateY(-1px);
-    display: block;
-  }
-
+  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; cursor: pointer; }
+  .item.checked .checkbox { background: var(--green); border-color: var(--green); }
+  .item.checked .checkbox::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #0f1117; border-bottom: 2px solid #0f1117; transform: rotate(-45deg) translateY(-1px); display: block; }
   .item-content { flex: 1; min-width: 0; cursor: pointer; }
   .item-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
   .item-note { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-
   .item-badges { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
-  .badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 2px;
-  }
+  .badge { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; }
   .badge-key { background: rgba(232,98,58,0.15); color: var(--accent2); border: 1px solid rgba(232,98,58,0.3); }
   .badge-buy { background: rgba(107,114,128,0.15); color: var(--muted); border: 1px solid var(--border); }
-  .badge-vietnam { background: rgba(78,203,113,0.1); color: var(--green); border: 1px solid rgba(78,203,113,0.3); }
-
-  .item-delete {
-    opacity: 0;
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 16px;
-    padding: 0 4px;
-    transition: opacity 0.15s, color 0.15s;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  .badge-local { background: rgba(78,203,113,0.1); color: var(--green); border: 1px solid rgba(78,203,113,0.3); }
+  .item-delete { opacity: 0; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 0 4px; transition: opacity 0.15s, color 0.15s; flex-shrink: 0; margin-top: 1px; }
   .item-delete:hover { color: var(--red); }
 
-  /* Add section button */
-  .add-section-btn {
-    width: 100%;
-    background: transparent;
-    border: 1px dashed var(--border);
-    border-radius: 6px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
-    padding: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-    margin-bottom: 24px;
-  }
+  .add-section-btn { width: 100%; background: transparent; border: 1px dashed var(--border); border-radius: 6px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 1px; padding: 12px; cursor: pointer; transition: all 0.15s; text-align: center; margin-bottom: 24px; }
   .add-section-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Add section modal */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 1px; border: 1px dashed var(--border); border-radius: 8px; margin-bottom: 12px; }
+  .empty-state .empty-icon { font-size: 28px; margin-bottom: 10px; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 32px;
-    max-width: 440px;
-    width: 100%;
-  }
-  .modal h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-  }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; max-width: 440px; width: 100%; }
+  .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 20px; }
   .modal-field { margin-bottom: 16px; }
-  .modal-field label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .modal-field input, .modal-field select {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 10px 14px;
-    outline: none;
-  }
+  .modal-field label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .modal-field input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 10px 14px; outline: none; }
   .modal-field input:focus { border-color: var(--accent); }
-  .emoji-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .emoji-btn {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: 18px;
-    padding: 6px;
-    cursor: pointer;
-    transition: all 0.1s;
-    text-align: center;
-  }
+  .emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin-top: 8px; }
+  .emoji-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 18px; padding: 6px; cursor: pointer; transition: all 0.1s; text-align: center; }
   .emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
   .emoji-btn.selected { border-color: var(--accent); background: rgba(244,166,34,0.1); }
   .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
-
-  /* Reset confirm */
-  .reset-bar {
-    max-width: 760px;
-    margin: 16px auto 0;
-    padding: 0 32px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-    margin-bottom: 12px;
-  }
-  .empty-state .empty-icon { font-size: 32px; margin-bottom: 12px; }
-
-  /* Share notice */
-  .share-bar {
-    max-width: 760px;
-    margin: 24px auto 0;
-    padding: 0 32px;
-  }
-  .share-notice {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 4px;
-    padding: 14px 16px;
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    line-height: 1.6;
-  }
-  .share-notice strong { color: var(--text); }
 
   @media (max-width: 600px) {
     .hero { padding: 32px 20px 28px; }
     .hero-bg-text { font-size: 70px; }
     .main { padding: 24px 20px 0; }
-    .progress-bar, .reset-bar, .share-bar { padding: 0 20px; }
+    .progress-bar, .notice-bar { padding: 0 20px; }
     .setup-card { padding: 28px 20px; }
     .setup-row { grid-template-columns: 1fr; }
     .add-bar-row { flex-direction: column; }
@@ -529,25 +166,26 @@
 </head>
 <body>
 
-<!-- ── SETUP SCREEN ── -->
+<!-- ── SETUP ── -->
 <div id="setup-screen">
   <div class="setup-card">
     <div class="setup-logo">🎒 PACK LIST</div>
-    <div class="setup-sub">Build your trip packing list</div>
+    <div class="setup-sub">AI-powered trip packing</div>
+    <div class="ai-badge">✦ Powered by Claude AI</div>
 
     <div class="setup-field">
       <label>Destination / Trip Name</label>
-      <input type="text" id="s-destination" placeholder="e.g. Vietnam" maxlength="40">
+      <input type="text" id="s-destination" placeholder="e.g. Vietnam, Iceland, Morocco" maxlength="60">
     </div>
 
     <div class="setup-field">
       <label>Bag / Kit</label>
-      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead 35L" maxlength="50">
+      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead 35L one-bag" maxlength="60">
     </div>
 
     <div class="setup-row">
       <div class="setup-field">
-        <label>Travel Dates</label>
+        <label>Travel Dates / Season</label>
         <input type="text" id="s-dates" placeholder="e.g. Mar – Apr 2026" maxlength="30">
       </div>
       <div class="setup-field">
@@ -557,7 +195,17 @@
     </div>
 
     <div class="setup-field">
-      <label>Trip Details / Tags <span style="color:var(--muted);font-size:10px">(press Enter to add)</span></label>
+      <label>Activities & Trip Style</label>
+      <textarea id="s-activities" rows="3" placeholder="e.g. Group tour, motorbike riding, kayaking, overnight trains, beach days, temple visits, city hopping"></textarea>
+    </div>
+
+    <div class="setup-field">
+      <label>Anything else? <span style="color:var(--muted);font-size:10px">(climate, one-bag, personal needs)</span></label>
+      <textarea id="s-extra" rows="2" placeholder="e.g. Hot and humid. I run hot and sweat a lot. No checked luggage."></textarea>
+    </div>
+
+    <div class="setup-field">
+      <label>Trip Tags <span style="color:var(--muted);font-size:10px">(optional, press Enter)</span></label>
       <div class="meta-tag-input">
         <input type="text" id="s-tag-input" placeholder="e.g. Intrepid Basix tour" maxlength="40">
         <button class="btn btn-outline btn-sm" onclick="addTag()">Add</button>
@@ -565,15 +213,31 @@
       <div class="meta-tags" id="s-tags"></div>
     </div>
 
-    <button class="btn" style="width:100%;margin-top:8px" onclick="launchApp()">
-      Build My Packing List →
+    <button class="btn" style="width:100%;margin-top:8px;font-size:14px" onclick="generateList()" id="generate-btn">
+      ✦ Generate My Packing List
     </button>
   </div>
 </div>
 
-<!-- ── MAIN APP ── -->
-<div id="app">
+<!-- ── GENERATING ── -->
+<div id="generating-screen">
+  <div class="gen-card">
+    <div class="gen-spinner"></div>
+    <div class="gen-title">Building Your List</div>
+    <div class="gen-dest" id="gen-dest-label"></div>
+    <div class="gen-steps">
+      <div class="gen-step active" id="step-1"><div class="step-dot"></div>Reading your trip details</div>
+      <div class="gen-step" id="step-2"><div class="step-dot"></div>Analysing destination &amp; climate</div>
+      <div class="gen-step" id="step-3"><div class="step-dot"></div>Tailoring to your activities</div>
+      <div class="gen-step" id="step-4"><div class="step-dot"></div>Building categories &amp; items</div>
+      <div class="gen-step" id="step-5"><div class="step-dot"></div>Finalising your list</div>
+    </div>
+    <div class="gen-error" id="gen-error"></div>
+  </div>
+</div>
 
+<!-- ── APP ── -->
+<div id="app">
   <div class="hero">
     <div class="hero-inner">
       <div class="trip-tag">🎒 <span id="h-bag">One Bag</span></div>
@@ -581,7 +245,8 @@
       <div class="hero-meta" id="h-meta"></div>
       <div class="hero-actions">
         <button class="btn btn-outline btn-sm" onclick="resetAll()">↺ Reset All Ticks</button>
-        <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Trip Details</button>
+        <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Details</button>
+        <button class="btn btn-outline btn-sm" onclick="regenList()" style="color:var(--accent);border-color:rgba(244,166,34,0.3)">✦ Regenerate</button>
         <button class="btn btn-outline btn-sm" onclick="startFresh()" style="color:var(--red);border-color:rgba(232,79,79,0.4)">✕ Start Fresh</button>
       </div>
     </div>
@@ -589,51 +254,42 @@
   </div>
 
   <div class="progress-bar">
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-label">
       <span>Packed <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
       <span id="progressPct" style="color:var(--accent)">0%</span>
     </div>
   </div>
 
-  <div class="share-bar">
-    <div class="share-notice" id="share-notice" style="display:none">
-      <strong>💾 Auto-saved</strong> — your list is saved in this browser. Close the tab and come back anytime — everything will be here. &nbsp;·&nbsp; <strong>Sharing?</strong> Host on <strong>Netlify Drop</strong> (drop.netlify.com) for a free link — each person gets their own saved copy.
+  <div class="notice-bar">
+    <div class="notice">
+      <strong>💾 Auto-saved</strong> — your list is saved in this browser. Close the tab and come back anytime. &nbsp;·&nbsp;
+      <strong>Sharing?</strong> Host on <strong>drop.netlify.com</strong> — each person gets their own AI-generated copy.
     </div>
   </div>
 
   <div class="main">
-
-    <!-- Add Item Bar -->
     <div class="add-bar">
-      <div class="add-bar-title">+ Add Item</div>
+      <div class="add-bar-title">+ Add Item Manually</div>
       <div class="add-bar-row">
         <input class="item-name-input" type="text" id="new-item-name" placeholder="Item name" maxlength="80">
         <input class="item-note-input" type="text" id="new-item-note" placeholder="Optional note" maxlength="120">
-        <select id="new-item-section">
-          <option value="">— Category —</option>
-        </select>
+        <select id="new-item-section"><option value="">— Category —</option></select>
         <select id="new-item-badge">
           <option value="">No badge</option>
           <option value="key">🔥 Key Item</option>
           <option value="buy">🛒 To Buy</option>
-          <option value="vietnam">📍 Buy Local</option>
+          <option value="local">📍 Buy Local</option>
         </select>
         <button class="btn btn-sm" onclick="addItem()">Add</button>
       </div>
     </div>
-
-    <!-- Sections rendered here -->
     <div id="sections-container"></div>
-
-    <button class="add-section-btn" onclick="openAddSection()">+ Add Category / Section</button>
-
+    <button class="add-section-btn" onclick="openAddSection()">+ Add Category</button>
   </div>
 </div>
 
-<!-- ── ADD SECTION MODAL ── -->
+<!-- ── MODAL ── -->
 <div class="modal-overlay" id="sectionModal">
   <div class="modal">
     <h3>New Category</h3>
@@ -653,356 +309,319 @@
 </div>
 
 <script>
-const EMOJIS = ['👕','🧥','👟','👜','📱','💊','📄','🏕️','🧴','🔦','⚡','🎒','🛏️','📦','🍽️','💰','📷','🗺️','🧳','🎿','🏊','🚴','🏔️','🌊','🎧','💻','🔑','🪥','🩹','🧢'];
-const STORAGE_KEY = 'packListData_v1';
+const EMOJIS = ['👕','🧥','👟','👜','📱','💊','📄','🏕️','🧴','🔦','⚡','🎒','🛏️','📦','🍽️','💰','📷','🗺️','🧳','🎿','🏊','🚴','🏔️','🌊','🎧','💻','🔑','🪥','🩹','🧢','☀️','🕶️','🔋','🗝️','🩺'];
+const STORAGE_KEY = 'packListData_v2';
 
-let sections = [];
-let items = [];
-let tripMeta = {};
-let tags = [];
-let selectedEmoji = '📦';
+let sections = [], items = [], tripMeta = {}, tags = [], selectedEmoji = '📦';
 
-// ── PERSIST ──
+// ── STORAGE ──
 function save() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tripMeta, sections, items }));
-  } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ tripMeta, sections, items })); } catch(e) {}
 }
-
 function loadSaved() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
-    const data = JSON.parse(raw);
-    if (!data.tripMeta || !data.sections) return false;
-    tripMeta = data.tripMeta;
-    sections = data.sections;
-    items = data.items || [];
+    const d = JSON.parse(raw);
+    if (!d.tripMeta || !d.sections) return false;
+    tripMeta = d.tripMeta; sections = d.sections; items = d.items || [];
     tags = [...(tripMeta.tags || [])];
     return true;
   } catch(e) { return false; }
 }
+function clearSaved() { try { localStorage.removeItem(STORAGE_KEY); } catch(e) {} }
 
-function clearSaved() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+// ── SCREEN SWITCHER ──
+function show(id) {
+  document.getElementById('setup-screen').style.display     = id === 'setup-screen'     ? 'flex'  : 'none';
+  document.getElementById('generating-screen').style.display= id === 'generating-screen' ? 'flex'  : 'none';
+  document.getElementById('app').style.display              = id === 'app'               ? 'block' : 'none';
 }
 
-// ── BOOT: check for saved data ──
+// ── BOOT ──
 window.addEventListener('DOMContentLoaded', () => {
   if (loadSaved()) {
-    renderHero();
-    renderSections();
-    updateSectionSelect();
-    updateProgress();
-    document.getElementById('setup-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('share-notice').style.display = 'block';
+    renderHero(); renderSections(); updateSectionSelect(); updateProgress();
+    show('app');
   }
-
-  document.getElementById('s-tag-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); addTag(); }
-  });
-  document.getElementById('new-item-name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addItem();
-  });
-  document.getElementById('new-section-name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') confirmAddSection();
-    if (e.key === 'Escape') closeAddSection();
-  });
-  document.getElementById('sectionModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('sectionModal')) closeAddSection();
-  });
+  document.getElementById('s-tag-input').addEventListener('keydown', e => { if (e.key==='Enter'){e.preventDefault();addTag();} });
+  document.getElementById('new-item-name').addEventListener('keydown', e => { if (e.key==='Enter') addItem(); });
+  document.getElementById('new-section-name').addEventListener('keydown', e => { if(e.key==='Enter') confirmAddSection(); if(e.key==='Escape') closeAddSection(); });
+  document.getElementById('sectionModal').addEventListener('click', e => { if(e.target===document.getElementById('sectionModal')) closeAddSection(); });
 });
 
-// ── SETUP ──
+// ── TAGS ──
 function addTag() {
-  const input = document.getElementById('s-tag-input');
-  const val = input.value.trim();
-  if (!val) return;
-  tags.push(val);
-  renderTags();
-  input.value = '';
+  const el = document.getElementById('s-tag-input');
+  const v = el.value.trim(); if (!v) return;
+  tags.push(v); renderTags(); el.value = '';
 }
-
 function renderTags() {
-  const el = document.getElementById('s-tags');
-  el.innerHTML = tags.map((t, i) => `
-    <span class="meta-tag" onclick="removeTag(${i})">
-      ${t} <span class="remove">×</span>
-    </span>
-  `).join('');
+  document.getElementById('s-tags').innerHTML = tags.map((t,i) =>
+    `<span class="meta-tag" onclick="removeTag(${i})">${t} <span class="remove">×</span></span>`
+  ).join('');
 }
+function removeTag(i) { tags.splice(i,1); renderTags(); }
 
-function removeTag(i) {
-  tags.splice(i, 1);
-  renderTags();
-}
-
-function launchApp() {
-  const dest = document.getElementById('s-destination').value.trim() || 'My Trip';
-  const bag  = document.getElementById('s-bag').value.trim();
-  const dates = document.getElementById('s-dates').value.trim();
-  const duration = document.getElementById('s-duration').value.trim();
-
-  tripMeta = { dest, bag, dates, duration, tags: [...tags] };
-  renderHero();
-  loadDefaultSections();
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  updateProgress();
-  save();
-}
-
+// ── SETUP / EDIT / FRESH ──
 function editTrip() {
-  document.getElementById('s-destination').value = tripMeta.dest;
+  document.getElementById('s-destination').value = tripMeta.dest || '';
   document.getElementById('s-bag').value = tripMeta.bag || '';
   document.getElementById('s-dates').value = tripMeta.dates || '';
   document.getElementById('s-duration').value = tripMeta.duration || '';
-  tags = [...(tripMeta.tags || [])];
-  renderTags();
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('s-activities').value = tripMeta.activities || '';
+  document.getElementById('s-extra').value = tripMeta.extra || '';
+  tags = [...(tripMeta.tags||[])]; renderTags();
+  show('setup-screen');
 }
 
 function startFresh() {
-  if (!confirm('Clear everything and start a new list? This cannot be undone.')) return;
-  clearSaved();
-  sections = []; items = []; tripMeta = {}; tags = [];
-  document.getElementById('s-destination').value = '';
-  document.getElementById('s-bag').value = '';
-  document.getElementById('s-dates').value = '';
-  document.getElementById('s-duration').value = '';
-  renderTags();
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'flex';
+  if (!confirm('Clear everything and start a new list?')) return;
+  clearSaved(); sections=[]; items=[]; tripMeta={}; tags=[];
+  ['s-destination','s-bag','s-dates','s-duration','s-activities','s-extra'].forEach(id => document.getElementById(id).value = '');
+  renderTags(); show('setup-screen');
 }
 
-function renderHero() {
-  const { dest, bag, dates, duration, tags } = tripMeta;
-  const words = dest.toUpperCase().split(' ');
-  const line1 = words.slice(0, Math.ceil(words.length / 2)).join(' ');
-  const line2 = words.slice(Math.ceil(words.length / 2)).join(' ');
+function regenList() {
+  if (!confirm('Regenerate the list from AI? Your current items will be replaced.')) return;
+  editTrip();
+}
 
-  document.getElementById('h-destination').innerHTML =
-    line2 ? `${line1}<br><span>${line2}</span>` : `<span>${line1}</span>`;
+// ── AI GENERATION ──
+async function generateList() {
+  const dest = document.getElementById('s-destination').value.trim();
+  if (!dest) { document.getElementById('s-destination').focus(); return; }
+
+  tripMeta = {
+    dest,
+    bag:        document.getElementById('s-bag').value.trim(),
+    dates:      document.getElementById('s-dates').value.trim(),
+    duration:   document.getElementById('s-duration').value.trim(),
+    activities: document.getElementById('s-activities').value.trim(),
+    extra:      document.getElementById('s-extra').value.trim(),
+    tags:       [...tags]
+  };
+
+  document.getElementById('generate-btn').disabled = true;
+  document.getElementById('gen-dest-label').textContent = dest.toUpperCase();
+  document.getElementById('gen-error').style.display = 'none';
+  resetSteps();
+  show('generating-screen');
+
+  // Animate progress steps
+  [0, 1400, 3000, 4800, 6400].forEach((t, i) => setTimeout(() => advanceStep(i+1), t));
+
+  try {
+    // 👇 Replace this URL with your Cloudflare Worker URL after deploying it
+    const WORKER_URL = 'https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev';
+
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: buildPrompt(tripMeta) })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const raw = data.result.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(raw);
+
+    advanceStep(5);
+    await new Promise(r => setTimeout(r, 700));
+
+    // Load generated data
+    sections = parsed.sections.map((s, i) => ({ id: 'sec-'+i, name: s.name, icon: s.icon || '📦' }));
+    items = [];
+    parsed.sections.forEach((s, si) => {
+      (s.items || []).forEach((item, ii) => {
+        items.push({ id: `i-${si}-${ii}`, sectionId: 'sec-'+si, name: item.name, note: item.note || '', badge: item.badge || '', checked: false });
+      });
+    });
+
+    save();
+    renderHero(); renderSections(); updateSectionSelect(); updateProgress();
+    show('app');
+
+  } catch(err) {
+    const errEl = document.getElementById('gen-error');
+    errEl.style.display = 'block';
+    errEl.innerHTML = `<strong>Something went wrong:</strong> ${err.message}<br><br>
+      <button class="btn btn-sm" onclick="document.getElementById('generate-btn').disabled=false;show('setup-screen')" style="margin-top:4px">← Back to Setup</button>`;
+    document.getElementById('generate-btn').disabled = false;
+  }
+}
+
+function buildPrompt(m) {
+  return `Generate a comprehensive packing list for this trip:
+
+Destination: ${m.dest}
+Bag/Kit: ${m.bag || 'not specified'}
+Travel dates/season: ${m.dates || 'not specified'}
+Duration: ${m.duration || 'not specified'}
+Activities & trip style: ${m.activities || 'general travel'}
+Additional notes: ${m.extra || 'none'}
+Tags: ${(m.tags||[]).join(', ') || 'none'}
+
+Return ONLY a JSON object in this exact format:
+{
+  "sections": [
+    {
+      "name": "Section Name",
+      "icon": "single emoji",
+      "items": [
+        {
+          "name": "Item name with quantity if helpful e.g. T-shirts x3",
+          "note": "Short specific tip for this trip (max 12 words, destination-specific, not generic)",
+          "badge": "key|buy|local|"
+        }
+      ]
+    }
+  ]
+}
+
+Badge rules: "key" = essential item, "buy" = buy before trip, "local" = buy at destination, "" = standard item.
+
+Guidelines:
+- 6-10 sections tailored to this specific trip
+- 4-10 items per section
+- Notes must be SHORT and SPECIFIC to their destination/activities
+- Always include: Clothing, Footwear, Tech & Electronics, Health & Toiletries, Documents & Money
+- Add TRIP-SPECIFIC sections (e.g. "Motorbike Gear" for moto tours, "Water Activities" for kayaking/diving)
+- For one-bag/carry-on: suggest versatile multi-use items, note laundry strategy
+- For hot/humid climates: prioritise lightweight quick-dry fabrics, strong sun/insect protection
+- For adventure activities: include specific gear for those activities
+- Be opinionated and practical — give real recommendations not generic placeholders
+- ONLY return the JSON object, nothing else`;
+}
+
+function resetSteps() {
+  for (let i=1;i<=5;i++) { const e=document.getElementById('step-'+i); e.classList.remove('active','done'); }
+  document.getElementById('step-1').classList.add('active');
+}
+function advanceStep(n) {
+  for (let i=1;i<n;i++) { const e=document.getElementById('step-'+i); e.classList.remove('active'); e.classList.add('done'); }
+  const c=document.getElementById('step-'+n); if(c) c.classList.add('active');
+}
+
+// ── HERO ──
+function renderHero() {
+  const { dest='My Trip', bag, dates, duration, tags:t=[] } = tripMeta;
+  const words = dest.toUpperCase().split(' ');
+  const mid = Math.ceil(words.length/2);
+  const l1 = words.slice(0,mid).join(' '), l2 = words.slice(mid).join(' ');
+  document.getElementById('h-destination').innerHTML = l2 ? `${l1}<br><span>${l2}</span>` : `<span>${l1}</span>`;
   document.getElementById('h-bg-text').textContent = dest.toUpperCase();
   document.getElementById('h-bag').textContent = bag || 'One Bag';
-
-  const metaEl = document.getElementById('h-meta');
-  let metaHTML = '';
-  if (dates) metaHTML += `<span>📅 <strong>${dates}</strong></span>`;
-  if (duration) metaHTML += `<span>⏱ <strong>${duration}</strong></span>`;
-  (tags || []).forEach(t => metaHTML += `<span>📍 <strong>${t}</strong></span>`);
-  metaEl.innerHTML = metaHTML;
-
+  let m='';
+  if (dates) m+=`<span>📅 <strong>${dates}</strong></span>`;
+  if (duration) m+=`<span>⏱ <strong>${duration}</strong></span>`;
+  t.forEach(tag => m+=`<span>📍 <strong>${tag}</strong></span>`);
+  document.getElementById('h-meta').innerHTML = m;
   document.title = `${dest} — Pack List`;
 }
 
-// ── DEFAULT SECTIONS ──
-function loadDefaultSections() {
-  const defaults = [
-    { id: 's1', name: 'Clothing', icon: '👕' },
-    { id: 's2', name: 'Jacket & Layers', icon: '🧥' },
-    { id: 's3', name: 'Footwear', icon: '👟' },
-    { id: 's4', name: 'Tech & Electronics', icon: '📱' },
-    { id: 's5', name: 'Bags & Organisation', icon: '📦' },
-    { id: 's6', name: 'Sleep & Comfort', icon: '🛏️' },
-    { id: 's7', name: 'Health & Toiletries', icon: '💊' },
-    { id: 's8', name: 'Documents & Money', icon: '📄' },
-  ];
-  sections = defaults;
-  items = [];
-  renderSections();
-  updateSectionSelect();
-}
-
-// ── SECTIONS ──
+// ── SECTIONS & ITEMS ──
 function renderSections() {
-  const container = document.getElementById('sections-container');
-  container.innerHTML = '';
-
+  const c = document.getElementById('sections-container'); c.innerHTML='';
   sections.forEach(sec => {
-    const secItems = items.filter(i => i.sectionId === sec.id);
-    const checkedCount = secItems.filter(i => i.checked).length;
-
-    const div = document.createElement('div');
-    div.className = 'section';
-    div.id = 'section-' + sec.id;
-
-    let itemsHTML = secItems.length === 0
-      ? `<div class="empty-state"><div class="empty-icon">${sec.icon}</div>No items yet — add one above</div>`
-      : secItems.map(item => renderItemHTML(item)).join('');
-
-    div.innerHTML = `
+    const si = items.filter(i=>i.sectionId===sec.id);
+    const chk = si.filter(i=>i.checked).length;
+    const div = document.createElement('div'); div.className='section'; div.id='section-'+sec.id;
+    div.innerHTML=`
       <div class="section-header">
         <div class="section-icon">${sec.icon}</div>
         <div class="section-title">${sec.name}</div>
-        <div class="section-count">${checkedCount} / ${secItems.length}</div>
-        <button onclick="deleteSection('${sec.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;margin-left:8px;opacity:0.5;transition:opacity 0.15s" onmouseover="this.style.opacity=1;this.style.color='var(--red)'" onmouseout="this.style.opacity=0.5;this.style.color='var(--muted)'" title="Delete section">✕</button>
+        <div class="section-count">${chk} / ${si.length}</div>
+        <button onclick="deleteSection('${sec.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;margin-left:8px;opacity:0.4;transition:opacity 0.15s" onmouseover="this.style.opacity=1;this.style.color='var(--red)'" onmouseout="this.style.opacity=0.4;this.style.color='var(--muted)'" title="Delete">✕</button>
       </div>
-      <div class="section-items" id="items-${sec.id}">${itemsHTML}</div>
-    `;
-    container.appendChild(div);
+      <div class="section-items" id="items-${sec.id}">
+        ${si.length===0
+          ? `<div class="empty-state"><div class="empty-icon">${sec.icon}</div>No items yet</div>`
+          : si.map(renderItemHTML).join('')}
+      </div>`;
+    c.appendChild(div);
   });
 }
 
 function renderItemHTML(item) {
-  const badgeMap = {
-    key: '<span class="badge badge-key">🔥 Key Item</span>',
-    buy: '<span class="badge badge-buy">🛒 To Buy</span>',
-    vietnam: '<span class="badge badge-vietnam">📍 Buy Local</span>',
-  };
-  const badge = item.badge ? badgeMap[item.badge] || '' : '';
-  const noteHTML = item.note ? `<div class="item-note">${item.note}</div>` : '';
-  const badgesHTML = badge ? `<div class="item-badges">${badge}</div>` : '';
-
+  const bm = { key:'<span class="badge badge-key">🔥 Key Item</span>', buy:'<span class="badge badge-buy">🛒 To Buy</span>', local:'<span class="badge badge-local">📍 Buy Local</span>' };
+  const badge = item.badge ? (bm[item.badge]||'') : '';
   return `
-    <div class="item${item.checked ? ' checked' : ''}" id="item-${item.id}">
+    <div class="item${item.checked?' checked':''}" id="item-${item.id}">
       <div class="checkbox" onclick="toggleItem('${item.id}')"></div>
       <div class="item-content" onclick="toggleItem('${item.id}')">
         <div class="item-name">${item.name}</div>
-        ${noteHTML}
-        ${badgesHTML}
+        ${item.note?`<div class="item-note">${item.note}</div>`:''}
+        ${badge?`<div class="item-badges">${badge}</div>`:''}
       </div>
       <button class="item-delete" onclick="deleteItem('${item.id}')" title="Remove">✕</button>
-    </div>
-  `;
+    </div>`;
 }
 
 function updateSectionSelect() {
-  const sel = document.getElementById('new-item-section');
-  sel.innerHTML = '<option value="">— Category —</option>';
-  sections.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s.id;
-    opt.textContent = s.icon + ' ' + s.name;
-    sel.appendChild(opt);
-  });
+  const s = document.getElementById('new-item-section');
+  s.innerHTML='<option value="">— Category —</option>';
+  sections.forEach(sec => { const o=document.createElement('option'); o.value=sec.id; o.textContent=sec.icon+' '+sec.name; s.appendChild(o); });
 }
 
-// ── ITEMS ──
 function addItem() {
-  const nameEl = document.getElementById('new-item-name');
-  const noteEl = document.getElementById('new-item-note');
-  const secEl  = document.getElementById('new-item-section');
-  const badgeEl = document.getElementById('new-item-badge');
-
-  const name = nameEl.value.trim();
-  if (!name) { nameEl.focus(); return; }
-
-  let sectionId = secEl.value;
-  if (!sectionId && sections.length > 0) sectionId = sections[0].id;
-
-  const item = {
-    id: 'item-' + Date.now(),
-    sectionId,
-    name,
-    note: noteEl.value.trim(),
-    badge: badgeEl.value,
-    checked: false,
-  };
-
-  items.push(item);
-  nameEl.value = '';
-  noteEl.value = '';
-  renderSections();
-  updateProgress();
-  save();
-
-  document.getElementById('share-notice').style.display = 'block';
+  const n=document.getElementById('new-item-name'), nt=document.getElementById('new-item-note'), se=document.getElementById('new-item-section'), bd=document.getElementById('new-item-badge');
+  const name=n.value.trim(); if(!name){n.focus();return;}
+  let sid=se.value; if(!sid&&sections.length>0) sid=sections[0].id;
+  items.push({id:'item-'+Date.now(),sectionId:sid,name,note:nt.value.trim(),badge:bd.value,checked:false});
+  n.value=''; nt.value='';
+  renderSections(); updateProgress(); save();
 }
 
 function toggleItem(id) {
-  const item = items.find(i => i.id === id);
-  if (!item) return;
-  item.checked = !item.checked;
-
-  const el = document.getElementById('item-' + id);
-  if (el) el.classList.toggle('checked', item.checked);
-
-  const sec = sections.find(s => s.id === item.sectionId);
-  if (sec) {
-    const secItems = items.filter(i => i.sectionId === sec.id);
-    const count = secItems.filter(i => i.checked).length;
-    const countEl = document.querySelector(`#section-${sec.id} .section-count`);
-    if (countEl) countEl.textContent = count + ' / ' + secItems.length;
-  }
-
-  updateProgress();
-  save();
+  const item=items.find(i=>i.id===id); if(!item) return;
+  item.checked=!item.checked;
+  const el=document.getElementById('item-'+id); if(el) el.classList.toggle('checked',item.checked);
+  const sec=sections.find(s=>s.id===item.sectionId);
+  if(sec) { const si=items.filter(i=>i.sectionId===sec.id); const ce=document.querySelector(`#section-${sec.id} .section-count`); if(ce) ce.textContent=si.filter(i=>i.checked).length+' / '+si.length; }
+  updateProgress(); save();
 }
 
-function deleteItem(id) {
-  items = items.filter(i => i.id !== id);
-  renderSections();
-  updateProgress();
-  save();
-}
+function deleteItem(id) { items=items.filter(i=>i.id!==id); renderSections(); updateProgress(); save(); }
 
 function deleteSection(id) {
-  if (items.filter(i => i.sectionId === id).length > 0) {
-    if (!confirm('This section has items. Delete anyway?')) return;
-  }
-  sections = sections.filter(s => s.id !== id);
-  items = items.filter(i => i.sectionId !== id);
-  renderSections();
-  updateSectionSelect();
-  updateProgress();
-  save();
+  if(items.filter(i=>i.sectionId===id).length>0 && !confirm('Delete this section and its items?')) return;
+  sections=sections.filter(s=>s.id!==id); items=items.filter(i=>i.sectionId!==id);
+  renderSections(); updateSectionSelect(); updateProgress(); save();
 }
 
 function resetAll() {
-  if (!confirm('Reset all ticked items?')) return;
-  items.forEach(i => i.checked = false);
-  renderSections();
-  updateProgress();
-  save();
+  if(!confirm('Reset all ticked items?')) return;
+  items.forEach(i=>i.checked=false); renderSections(); updateProgress(); save();
 }
 
-// ── PROGRESS ──
 function updateProgress() {
-  const total = items.length;
-  const done = items.filter(i => i.checked).length;
-  const pct = total ? Math.round((done / total) * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('packedCount').textContent = done;
-  document.getElementById('totalCount').textContent = total;
-  document.getElementById('progressPct').textContent = pct + '%';
+  const total=items.length, done=items.filter(i=>i.checked).length, pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('packedCount').textContent=done;
+  document.getElementById('totalCount').textContent=total;
+  document.getElementById('progressPct').textContent=pct+'%';
 }
 
-// ── ADD SECTION MODAL ──
+// ── MODAL ──
 function openAddSection() {
-  selectedEmoji = '📦';
-  document.getElementById('new-section-name').value = '';
-  const grid = document.getElementById('emoji-grid');
-  grid.innerHTML = EMOJIS.map(e => `
-    <button class="emoji-btn${e === selectedEmoji ? ' selected' : ''}" onclick="selectEmoji('${e}', this)">${e}</button>
-  `).join('');
+  selectedEmoji='📦';
+  document.getElementById('new-section-name').value='';
+  document.getElementById('emoji-grid').innerHTML=EMOJIS.map(e=>`<button class="emoji-btn${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}',this)">${e}</button>`).join('');
   document.getElementById('sectionModal').classList.add('open');
-  setTimeout(() => document.getElementById('new-section-name').focus(), 100);
+  setTimeout(()=>document.getElementById('new-section-name').focus(),100);
 }
-
-function closeAddSection() {
-  document.getElementById('sectionModal').classList.remove('open');
-}
-
-function selectEmoji(e, btn) {
-  selectedEmoji = e;
-  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-
+function closeAddSection() { document.getElementById('sectionModal').classList.remove('open'); }
+function selectEmoji(e,btn) { selectedEmoji=e; document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); }
 function confirmAddSection() {
-  const name = document.getElementById('new-section-name').value.trim();
-  if (!name) { document.getElementById('new-section-name').focus(); return; }
-  const sec = { id: 'sec-' + Date.now(), name, icon: selectedEmoji };
-  sections.push(sec);
-  renderSections();
-  updateSectionSelect();
-  closeAddSection();
-  save();
+  const name=document.getElementById('new-section-name').value.trim(); if(!name){document.getElementById('new-section-name').focus();return;}
+  sections.push({id:'sec-'+Date.now(),name,icon:selectedEmoji});
+  renderSections(); updateSectionSelect(); closeAddSection(); save();
 }
 </script>
-
 </body>
 </html>
