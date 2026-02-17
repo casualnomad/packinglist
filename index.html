@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vietnam Packing List</title>
+<title>Trip Packing List</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,6 +14,7 @@
     --accent: #f4a622;
     --accent2: #e8623a;
     --green: #4ecb71;
+    --red: #e84f4f;
     --text: #e8e4dc;
     --muted: #6b7280;
     --tag-bg: #252b38;
@@ -26,10 +27,129 @@
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    padding: 0 0 80px 0;
+    padding-bottom: 100px;
   }
 
-  /* Header */
+  /* ── SETUP SCREEN ── */
+  #setup-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: radial-gradient(ellipse at 30% 20%, rgba(244,166,34,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(232,98,58,0.06) 0%, transparent 50%);
+  }
+
+  .setup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 48px;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .setup-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .setup-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+
+  .setup-field { margin-bottom: 20px; }
+  .setup-field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .setup-field input, .setup-field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .setup-field input:focus, .setup-field select:focus {
+    border-color: var(--accent);
+  }
+  .setup-field input::placeholder { color: var(--muted); }
+
+  .setup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .meta-fields { margin-top: 8px; }
+  .meta-tag-input {
+    display: flex; gap: 8px; margin-bottom: 8px;
+  }
+  .meta-tag-input input {
+    flex: 1;
+  }
+  .meta-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .meta-tag {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(244,166,34,0.12);
+    border: 1px solid rgba(244,166,34,0.25);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .meta-tag .remove { opacity: 0.6; font-size: 13px; }
+  .meta-tag:hover .remove { opacity: 1; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #0f1117;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-outline {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+  .btn-outline:hover { color: var(--text); border-color: var(--text); opacity: 1; }
+  .btn-sm { padding: 8px 14px; font-size: 11px; }
+  .btn-danger { background: var(--red); color: #fff; }
+
+  /* ── MAIN APP ── */
+  #app { display: none; }
+
   .hero {
     background: linear-gradient(135deg, #1a0a00 0%, #0f1117 50%, #0a1520 100%);
     border-bottom: 1px solid var(--border);
@@ -45,8 +165,7 @@
     background: radial-gradient(circle, rgba(244,166,34,0.12) 0%, transparent 70%);
     pointer-events: none;
   }
-  .hero::after {
-    content: 'VIỆT NAM';
+  .hero-bg-text {
     position: absolute;
     bottom: -20px; right: 24px;
     font-family: 'Bebas Neue', sans-serif;
@@ -55,6 +174,10 @@
     letter-spacing: 8px;
     pointer-events: none;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 80%;
+    text-overflow: clip;
   }
 
   .hero-inner { max-width: 760px; margin: 0 auto; }
@@ -75,14 +198,13 @@
   }
   .hero h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(52px, 8vw, 84px);
+    font-size: clamp(48px, 8vw, 84px);
     letter-spacing: 3px;
     line-height: 0.9;
     color: var(--text);
     margin-bottom: 16px;
   }
   .hero h1 span { color: var(--accent); }
-
   .hero-meta {
     display: flex;
     flex-wrap: wrap;
@@ -95,17 +217,22 @@
   .hero-meta span { display: flex; align-items: center; gap: 6px; }
   .hero-meta strong { color: var(--text); }
 
-  /* Progress bar */
+  .hero-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* Progress */
   .progress-bar {
     max-width: 760px;
     margin: 0 auto;
     padding: 0 32px;
-    margin-top: -1px;
   }
   .progress-track {
     height: 3px;
     background: var(--border);
-    position: relative;
   }
   .progress-fill {
     height: 100%;
@@ -122,8 +249,42 @@
   }
   .progress-label strong { color: var(--accent); }
 
-  /* Main content */
+  /* Main */
   .main { max-width: 760px; margin: 0 auto; padding: 40px 32px 0; }
+
+  /* Add item bar */
+  .add-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 32px;
+  }
+  .add-bar-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .add-bar-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .add-bar input, .add-bar select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .add-bar input:focus, .add-bar select:focus { border-color: var(--accent); }
+  .add-bar input::placeholder { color: var(--muted); }
+  .add-bar input.item-name-input { flex: 1; min-width: 160px; }
+  .add-bar input.item-note-input { flex: 1.5; min-width: 160px; }
+  .add-bar select { min-width: 130px; }
 
   /* Section */
   .section { margin-bottom: 36px; }
@@ -148,7 +309,6 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 22px;
     letter-spacing: 2px;
-    color: var(--text);
   }
   .section-count {
     margin-left: auto;
@@ -164,13 +324,13 @@
     gap: 12px;
     padding: 10px 12px;
     border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.15s;
     margin-bottom: 2px;
-    user-select: none;
+    transition: background 0.15s;
+    group: true;
   }
   .item:hover { background: var(--surface); }
-  .item.checked { opacity: 0.5; }
+  .item:hover .item-delete { opacity: 1; }
+  .item.checked { opacity: 0.45; }
   .item.checked .item-name { text-decoration: line-through; text-decoration-color: var(--muted); }
 
   .checkbox {
@@ -181,7 +341,7 @@
     margin-top: 2px;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.15s;
-    background: transparent;
+    cursor: pointer;
   }
   .item.checked .checkbox {
     background: var(--green);
@@ -195,32 +355,10 @@
     transform: rotate(-45deg) translateY(-1px);
     display: block;
   }
-  .item.owned .checkbox {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-  .item.owned .checkbox::after {
-    content: '';
-    width: 10px; height: 6px;
-    border-left: 2px solid #0f1117;
-    border-bottom: 2px solid #0f1117;
-    transform: rotate(-45deg) translateY(-1px);
-    display: block;
-  }
 
-  .item-content { flex: 1; min-width: 0; }
-  .item-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .item-note {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
+  .item-content { flex: 1; min-width: 0; cursor: pointer; }
+  .item-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+  .item-note { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
 
   .item-badges { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
   .badge {
@@ -231,474 +369,639 @@
     padding: 2px 7px;
     border-radius: 2px;
   }
-  .badge-owned { background: rgba(244,166,34,0.15); color: var(--accent); border: 1px solid rgba(244,166,34,0.3); }
   .badge-key { background: rgba(232,98,58,0.15); color: var(--accent2); border: 1px solid rgba(232,98,58,0.3); }
   .badge-buy { background: rgba(107,114,128,0.15); color: var(--muted); border: 1px solid var(--border); }
   .badge-vietnam { background: rgba(78,203,113,0.1); color: var(--green); border: 1px solid rgba(78,203,113,0.3); }
 
-  /* Footer note */
-  .footer-note {
-    margin-top: 48px;
+  .item-delete {
+    opacity: 0;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 4px;
+    transition: opacity 0.15s, color 0.15s;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .item-delete:hover { color: var(--red); }
+
+  /* Add section button */
+  .add-section-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .add-section-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Add section modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    max-width: 440px;
+    width: 100%;
+  }
+  .modal h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+  .modal-field { margin-bottom: 16px; }
+  .modal-field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .modal-field input, .modal-field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+  }
+  .modal-field input:focus { border-color: var(--accent); }
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .emoji-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 18px;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.1s;
+    text-align: center;
+  }
+  .emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
+  .emoji-btn.selected { border-color: var(--accent); background: rgba(244,166,34,0.1); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+
+  /* Reset confirm */
+  .reset-bar {
+    max-width: 760px;
+    margin: 16px auto 0;
+    padding: 0 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .empty-state .empty-icon { font-size: 32px; margin-bottom: 12px; }
+
+  /* Share notice */
+  .share-bar {
+    max-width: 760px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+  }
+  .share-notice {
     background: var(--surface);
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
     border-radius: 4px;
-    font-size: 13px;
+    padding: 14px 16px;
+    font-size: 12px;
     color: var(--muted);
+    font-family: 'DM Mono', monospace;
     line-height: 1.6;
   }
-  .footer-note strong { color: var(--text); }
+  .share-notice strong { color: var(--text); }
 
   @media (max-width: 600px) {
-    .hero { padding: 36px 20px 28px; }
-    .hero::after { font-size: 70px; }
-    .main { padding: 28px 20px 0; }
-    .progress-bar { padding: 0 20px; }
+    .hero { padding: 32px 20px 28px; }
+    .hero-bg-text { font-size: 70px; }
+    .main { padding: 24px 20px 0; }
+    .progress-bar, .reset-bar, .share-bar { padding: 0 20px; }
+    .setup-card { padding: 28px 20px; }
+    .setup-row { grid-template-columns: 1fr; }
+    .add-bar-row { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div class="trip-tag">🎒 One Bag · Kathmandu Trailhead 35L</div>
-    <h1>VIETNAM<br><span>PACK LIST</span></h1>
-    <div class="hero-meta">
-      <span>📍 <strong>HCMC → Hanoi</strong></span>
-      <span>📅 <strong>Mar – Apr · 4 weeks</strong></span>
-      <span>🏍️ <strong>Intrepid Basix + moto tour</strong></span>
-      <span>⛵ <strong>Cat Ba cruise</strong></span>
+<!-- ── SETUP SCREEN ── -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-logo">🎒 PACK LIST</div>
+    <div class="setup-sub">Build your trip packing list</div>
+
+    <div class="setup-field">
+      <label>Destination / Trip Name</label>
+      <input type="text" id="s-destination" placeholder="e.g. Vietnam" maxlength="40">
     </div>
+
+    <div class="setup-field">
+      <label>Bag / Kit</label>
+      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead 35L" maxlength="50">
+    </div>
+
+    <div class="setup-row">
+      <div class="setup-field">
+        <label>Travel Dates</label>
+        <input type="text" id="s-dates" placeholder="e.g. Mar – Apr 2026" maxlength="30">
+      </div>
+      <div class="setup-field">
+        <label>Duration</label>
+        <input type="text" id="s-duration" placeholder="e.g. 4 weeks" maxlength="20">
+      </div>
+    </div>
+
+    <div class="setup-field">
+      <label>Trip Details / Tags <span style="color:var(--muted);font-size:10px">(press Enter to add)</span></label>
+      <div class="meta-tag-input">
+        <input type="text" id="s-tag-input" placeholder="e.g. Intrepid Basix tour" maxlength="40">
+        <button class="btn btn-outline btn-sm" onclick="addTag()">Add</button>
+      </div>
+      <div class="meta-tags" id="s-tags"></div>
+    </div>
+
+    <button class="btn" style="width:100%;margin-top:8px" onclick="launchApp()">
+      Build My Packing List →
+    </button>
   </div>
 </div>
 
-<div class="progress-bar">
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+<!-- ── MAIN APP ── -->
+<div id="app">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="trip-tag">🎒 <span id="h-bag">One Bag</span></div>
+      <h1 id="h-destination">MY<br><span>TRIP</span></h1>
+      <div class="hero-meta" id="h-meta"></div>
+      <div class="hero-actions">
+        <button class="btn btn-outline btn-sm" onclick="resetAll()">↺ Reset All Ticks</button>
+        <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Trip Details</button>
+        <button class="btn btn-outline btn-sm" onclick="startFresh()" style="color:var(--red);border-color:rgba(232,79,79,0.4)">✕ Start Fresh</button>
+      </div>
+    </div>
+    <div class="hero-bg-text" id="h-bg-text"></div>
   </div>
-  <div class="progress-label">
-    <span>Packed <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
-    <span id="progressPct" style="color: var(--accent)">0%</span>
+
+  <div class="progress-bar">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+      <span>Packed <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
+      <span id="progressPct" style="color:var(--accent)">0%</span>
+    </div>
+  </div>
+
+  <div class="share-bar">
+    <div class="share-notice" id="share-notice" style="display:none">
+      <strong>💾 Auto-saved</strong> — your list is saved in this browser. Close the tab and come back anytime — everything will be here. &nbsp;·&nbsp; <strong>Sharing?</strong> Host on <strong>Netlify Drop</strong> (drop.netlify.com) for a free link — each person gets their own saved copy.
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Add Item Bar -->
+    <div class="add-bar">
+      <div class="add-bar-title">+ Add Item</div>
+      <div class="add-bar-row">
+        <input class="item-name-input" type="text" id="new-item-name" placeholder="Item name" maxlength="80">
+        <input class="item-note-input" type="text" id="new-item-note" placeholder="Optional note" maxlength="120">
+        <select id="new-item-section">
+          <option value="">— Category —</option>
+        </select>
+        <select id="new-item-badge">
+          <option value="">No badge</option>
+          <option value="key">🔥 Key Item</option>
+          <option value="buy">🛒 To Buy</option>
+          <option value="vietnam">📍 Buy Local</option>
+        </select>
+        <button class="btn btn-sm" onclick="addItem()">Add</button>
+      </div>
+    </div>
+
+    <!-- Sections rendered here -->
+    <div id="sections-container"></div>
+
+    <button class="add-section-btn" onclick="openAddSection()">+ Add Category / Section</button>
+
   </div>
 </div>
 
-<div class="main">
-
-  <!-- CLOTHING -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">👕</div>
-      <div class="section-title">Clothing</div>
-      <div class="section-count" id="count-clothing"></div>
+<!-- ── ADD SECTION MODAL ── -->
+<div class="modal-overlay" id="sectionModal">
+  <div class="modal">
+    <h3>New Category</h3>
+    <div class="modal-field">
+      <label>Category Name</label>
+      <input type="text" id="new-section-name" placeholder="e.g. Clothing, Tech, Documents" maxlength="30">
     </div>
-
-    <div class="item owned" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Macpac Men's brrr° T-Shirt (×1)</div>
-        <div class="item-note">Polygiene StayFresh + brrr° cooling — your benchmark tee. Get 1–2 more like this.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
-      </div>
+    <div class="modal-field">
+      <label>Icon</label>
+      <div class="emoji-grid" id="emoji-grid"></div>
     </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Synthetic / Polygiene T-shirts (×2 more)</div>
-        <div class="item-note">Match your brrr° tee — quick-dry, Polygiene treated. Aim for 3 tees total for rotation.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Long-sleeve shirt (×1)</div>
-        <div class="item-note">Merino or merino-blend. Temple visits, overnight trains, Hanoi evenings. Wears 2–3 days without washing.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Travel pants (×1)</div>
-        <div class="item-note">Slim chino or lightweight hiking style. Not cargo — too bulky. Covers temples, cities, Pu Luong trek.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Swim shorts / board shorts (×1)</div>
-        <div class="item-note">Doubles as casual shorts. Cat Ba beach, Lan Ha Bay kayaking, Mekong boat day.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Underwear — quick-dry (×4)</div>
-        <div class="item-note">Merino or synthetic. ExOfficio or similar. Sink-wash and overnight dry.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="clothing" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Socks — lightweight (×3 pairs)</div>
-        <div class="item-note">No-show or ankle. Darn Tough or merino blend. One for trail runners, one for sandals, one spare.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeAddSection()">Cancel</button>
+      <button class="btn" onclick="confirmAddSection()">Add Category</button>
     </div>
   </div>
-
-  <!-- JACKET & LAYER -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🧥</div>
-      <div class="section-title">Jacket & Layers</div>
-      <div class="section-count" id="count-jacket"></div>
-    </div>
-
-    <div class="item owned" data-section="jacket" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Kathmandu Andulo 2-layer Rain Jacket</div>
-        <div class="item-note">Waterproof, windproof, breathable. Hai Van Pass moto section, overnight train AC, northern Vietnam rain.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="jacket" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Buff / Neck Gaiter (×1)</div>
-        <div class="item-note">Moto tour dust + sun protection. Doubles as a light sleep layer on trains.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTWEAR -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">👟</div>
-      <div class="section-title">Footwear</div>
-      <div class="section-count" id="count-footwear"></div>
-    </div>
-
-    <div class="item" data-section="footwear" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Trail runners or walking shoes (×1)</div>
-        <div class="item-note">Covers Pu Luong trek, Hoi An bike ride, city walking, motorbike tour (closed-toe required). Wear on the plane.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="footwear" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Sandals — Teva / Chaco style (×1)</div>
-        <div class="item-note">Cat Ba beach, boat days, casual city wandering, homestay showers.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TECH -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">📱</div>
-      <div class="section-title">Tech & Electronics</div>
-      <div class="section-count" id="count-tech"></div>
-    </div>
-
-    <div class="item owned" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">iPhone 16</div>
-        <div class="item-note">Your camera. Get a case with a wrist loop — bag-snatching on scooters is real in HCMC.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item owned" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Belkin Boostcharge Pro 20,000mAh</div>
-        <div class="item-note">Carry-on only — never checked luggage. ~5 full iPhone charges. Overkill but fine.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
-      </div>
-    </div>
-
-    <div class="item owned" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">AirPods Pro 3</div>
-        <div class="item-note">ANC is a lifesaver on the 19-hour overnight train. Leave the Soundcore A20 at home — no need for both.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item owned" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Head Torch</div>
-        <div class="item-note">Pu Luong homestay, Cat Ba evening beach, basic hotel hallways. Keep it.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Universal power adapter (Type A/C, two-pin)</div>
-        <div class="item-note">Vietnam uses Type A and C plugs. A compact universal adapter covers all bases.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="tech" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Charging cable(s)</div>
-        <div class="item-note">USB-C for iPhone 16 + powerbank. One braided cable is enough if it's quality.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BAGS & ORGANISATION -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">📦</div>
-      <div class="section-title">Bags & Organisation</div>
-      <div class="section-count" id="count-bags"></div>
-    </div>
-
-    <div class="item owned" data-section="bags" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Packing cubes (fitted for Trailhead 35L)</div>
-        <div class="item-note">Keep tomorrow's outfit + rain jacket accessible on top. One cube clothes, one tech/cables.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="bags" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Small dry bag or waterproof phone pouch</div>
-        <div class="item-note">Essential for Lan Ha Bay kayaking, Mekong boat day, and Cat Ba beach. 5–10L is plenty.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="bags" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Small crossbody / day bag</div>
-        <div class="item-note">For city days when you don't want the full 35L on your back. Keeps your phone + wallet secure.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLEEP & COMFORT -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🛏️</div>
-      <div class="section-title">Sleep & Comfort</div>
-      <div class="section-count" id="count-sleep"></div>
-    </div>
-
-    <div class="item" data-section="sleep" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Silk or lightweight sleep liner</div>
-        <div class="item-note">Intrepid specifically recommends this for the overnight trains. Packs tiny. Game changer for comfort.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item owned" data-section="sleep" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Microfibre travel towel</div>
-        <div class="item-note">Cat Ba beach, Lan Ha Bay boat day, Mekong homestay. Make sure it's compact — Sea to Summit Airlite style.</div>
-        <div class="item-badges"><span class="badge badge-owned">✓ Owned</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HEALTH & TOILETRIES -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">💊</div>
-      <div class="section-title">Health & Toiletries</div>
-      <div class="section-count" id="count-health"></div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Sunscreen — solid stick</div>
-        <div class="item-note">Doesn't count as liquid. Vietnam sun is brutal March–April. Restock easily in country.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">DEET insect repellent</div>
-        <div class="item-note">Non-negotiable for Pu Luong and the Mekong Delta. Buy full size in Vietnam — cheap and strong.</div>
-        <div class="item-badges"><span class="badge badge-vietnam">Buy in Vietnam</span><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Basic first aid kit</div>
-        <div class="item-note">Blister pads (Hoi An bike day), antihistamines, electrolytes, imodium, paracetamol.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Solid toiletries (shampoo bar, soap)</div>
-        <div class="item-note">No liquid limits. Lush or similar. Compact and lasts the trip. Laundry bar too — Sard or similar.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Hand sanitiser (small)</div>
-        <div class="item-note">Street food and markets. Small bottle — buy backup in Vietnam at any 7-Eleven.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="health" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Toothbrush + toothpaste (travel size)</div>
-        <div class="item-note">Obvious, but easy to forget to pack small.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Buy</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DOCUMENTS -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">📄</div>
-      <div class="section-title">Documents & Money</div>
-      <div class="section-count" id="count-docs"></div>
-    </div>
-
-    <div class="item" data-section="docs" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Passport (valid 6+ months beyond travel)</div>
-        <div class="item-note">Vietnam requires 6 months validity. Check now.</div>
-        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="docs" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Vietnam e-Visa</div>
-        <div class="item-note">Apply online at evisa.xuatnhapcanh.gov.vn. NZ citizens — 90-day single entry available.</div>
-        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="docs" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Travel insurance docs</div>
-        <div class="item-note">Intrepid requires proof at welcome meeting. Print or have offline on phone.</div>
-        <div class="item-badges"><span class="badge badge-key">Key Item</span></div>
-      </div>
-    </div>
-
-    <div class="item" data-section="docs" onclick="toggle(this)">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-name">Travel card / low-fee debit card</div>
-        <div class="item-note">Wise or Revolut. Vietnam is still largely cash — ATMs everywhere, but use your card to withdraw VND.</div>
-        <div class="item-badges"><span class="badge badge-buy">To Get</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-note">
-    <strong>💡 Pro Tips</strong><br>
-    <strong>Laundry:</strong> USD 1–2/kg everywhere. Wash every 3–5 days — no need to overpack clothes.<br>
-    <strong>Hoi An tailors:</strong> Budget bag space coming home if you get anything made — it's worth it.<br>
-    <strong>Leave the Soundcore A20 at home</strong> — AirPods Pro 3 does everything better.<br>
-    <strong>Buying in Vietnam:</strong> DEET, sunscreen backup, snacks, SIM card — all cheap and easy at 7-Eleven.
-  </div>
-
 </div>
 
 <script>
-  function toggle(el) {
-    if (el.classList.contains('owned')) {
-      // owned items toggle between owned-checked and owned
-      if (el.classList.contains('checked')) {
-        el.classList.remove('checked');
-      } else {
-        el.classList.add('checked');
-      }
-    } else {
-      el.classList.toggle('checked');
-    }
+const EMOJIS = ['👕','🧥','👟','👜','📱','💊','📄','🏕️','🧴','🔦','⚡','🎒','🛏️','📦','🍽️','💰','📷','🗺️','🧳','🎿','🏊','🚴','🏔️','🌊','🎧','💻','🔑','🪥','🩹','🧢'];
+const STORAGE_KEY = 'packListData_v1';
+
+let sections = [];
+let items = [];
+let tripMeta = {};
+let tags = [];
+let selectedEmoji = '📦';
+
+// ── PERSIST ──
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tripMeta, sections, items }));
+  } catch(e) {}
+}
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data.tripMeta || !data.sections) return false;
+    tripMeta = data.tripMeta;
+    sections = data.sections;
+    items = data.items || [];
+    tags = [...(tripMeta.tags || [])];
+    return true;
+  } catch(e) { return false; }
+}
+
+function clearSaved() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+// ── BOOT: check for saved data ──
+window.addEventListener('DOMContentLoaded', () => {
+  if (loadSaved()) {
+    renderHero();
+    renderSections();
+    updateSectionSelect();
     updateProgress();
-    updateCounts();
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('share-notice').style.display = 'block';
   }
 
-  function updateProgress() {
-    const all = document.querySelectorAll('.item');
-    const checked = document.querySelectorAll('.item.checked');
-    const total = all.length;
-    const done = checked.length;
-    const pct = total ? Math.round((done / total) * 100) : 0;
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('packedCount').textContent = done;
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('progressPct').textContent = pct + '%';
-  }
-
-  function updateCounts() {
-    const sections = ['clothing','jacket','footwear','tech','bags','sleep','health','docs'];
-    sections.forEach(s => {
-      const items = document.querySelectorAll(`[data-section="${s}"]`);
-      const checked = document.querySelectorAll(`[data-section="${s}"].checked`);
-      const el = document.getElementById('count-' + s);
-      if (el) el.textContent = checked.length + ' / ' + items.length;
-    });
-  }
-
-  // Pre-tick all owned items on load
-  window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.item.owned').forEach(el => el.classList.add('checked'));
-    updateProgress();
-    updateCounts();
+  document.getElementById('s-tag-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addTag(); }
   });
+  document.getElementById('new-item-name').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+  document.getElementById('new-section-name').addEventListener('keydown', e => {
+    if (e.key === 'Enter') confirmAddSection();
+    if (e.key === 'Escape') closeAddSection();
+  });
+  document.getElementById('sectionModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('sectionModal')) closeAddSection();
+  });
+});
+
+// ── SETUP ──
+function addTag() {
+  const input = document.getElementById('s-tag-input');
+  const val = input.value.trim();
+  if (!val) return;
+  tags.push(val);
+  renderTags();
+  input.value = '';
+}
+
+function renderTags() {
+  const el = document.getElementById('s-tags');
+  el.innerHTML = tags.map((t, i) => `
+    <span class="meta-tag" onclick="removeTag(${i})">
+      ${t} <span class="remove">×</span>
+    </span>
+  `).join('');
+}
+
+function removeTag(i) {
+  tags.splice(i, 1);
+  renderTags();
+}
+
+function launchApp() {
+  const dest = document.getElementById('s-destination').value.trim() || 'My Trip';
+  const bag  = document.getElementById('s-bag').value.trim();
+  const dates = document.getElementById('s-dates').value.trim();
+  const duration = document.getElementById('s-duration').value.trim();
+
+  tripMeta = { dest, bag, dates, duration, tags: [...tags] };
+  renderHero();
+  loadDefaultSections();
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  updateProgress();
+  save();
+}
+
+function editTrip() {
+  document.getElementById('s-destination').value = tripMeta.dest;
+  document.getElementById('s-bag').value = tripMeta.bag || '';
+  document.getElementById('s-dates').value = tripMeta.dates || '';
+  document.getElementById('s-duration').value = tripMeta.duration || '';
+  tags = [...(tripMeta.tags || [])];
+  renderTags();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+}
+
+function startFresh() {
+  if (!confirm('Clear everything and start a new list? This cannot be undone.')) return;
+  clearSaved();
+  sections = []; items = []; tripMeta = {}; tags = [];
+  document.getElementById('s-destination').value = '';
+  document.getElementById('s-bag').value = '';
+  document.getElementById('s-dates').value = '';
+  document.getElementById('s-duration').value = '';
+  renderTags();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+}
+
+function renderHero() {
+  const { dest, bag, dates, duration, tags } = tripMeta;
+  const words = dest.toUpperCase().split(' ');
+  const line1 = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+  const line2 = words.slice(Math.ceil(words.length / 2)).join(' ');
+
+  document.getElementById('h-destination').innerHTML =
+    line2 ? `${line1}<br><span>${line2}</span>` : `<span>${line1}</span>`;
+  document.getElementById('h-bg-text').textContent = dest.toUpperCase();
+  document.getElementById('h-bag').textContent = bag || 'One Bag';
+
+  const metaEl = document.getElementById('h-meta');
+  let metaHTML = '';
+  if (dates) metaHTML += `<span>📅 <strong>${dates}</strong></span>`;
+  if (duration) metaHTML += `<span>⏱ <strong>${duration}</strong></span>`;
+  (tags || []).forEach(t => metaHTML += `<span>📍 <strong>${t}</strong></span>`);
+  metaEl.innerHTML = metaHTML;
+
+  document.title = `${dest} — Pack List`;
+}
+
+// ── DEFAULT SECTIONS ──
+function loadDefaultSections() {
+  const defaults = [
+    { id: 's1', name: 'Clothing', icon: '👕' },
+    { id: 's2', name: 'Jacket & Layers', icon: '🧥' },
+    { id: 's3', name: 'Footwear', icon: '👟' },
+    { id: 's4', name: 'Tech & Electronics', icon: '📱' },
+    { id: 's5', name: 'Bags & Organisation', icon: '📦' },
+    { id: 's6', name: 'Sleep & Comfort', icon: '🛏️' },
+    { id: 's7', name: 'Health & Toiletries', icon: '💊' },
+    { id: 's8', name: 'Documents & Money', icon: '📄' },
+  ];
+  sections = defaults;
+  items = [];
+  renderSections();
+  updateSectionSelect();
+}
+
+// ── SECTIONS ──
+function renderSections() {
+  const container = document.getElementById('sections-container');
+  container.innerHTML = '';
+
+  sections.forEach(sec => {
+    const secItems = items.filter(i => i.sectionId === sec.id);
+    const checkedCount = secItems.filter(i => i.checked).length;
+
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'section-' + sec.id;
+
+    let itemsHTML = secItems.length === 0
+      ? `<div class="empty-state"><div class="empty-icon">${sec.icon}</div>No items yet — add one above</div>`
+      : secItems.map(item => renderItemHTML(item)).join('');
+
+    div.innerHTML = `
+      <div class="section-header">
+        <div class="section-icon">${sec.icon}</div>
+        <div class="section-title">${sec.name}</div>
+        <div class="section-count">${checkedCount} / ${secItems.length}</div>
+        <button onclick="deleteSection('${sec.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;margin-left:8px;opacity:0.5;transition:opacity 0.15s" onmouseover="this.style.opacity=1;this.style.color='var(--red)'" onmouseout="this.style.opacity=0.5;this.style.color='var(--muted)'" title="Delete section">✕</button>
+      </div>
+      <div class="section-items" id="items-${sec.id}">${itemsHTML}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderItemHTML(item) {
+  const badgeMap = {
+    key: '<span class="badge badge-key">🔥 Key Item</span>',
+    buy: '<span class="badge badge-buy">🛒 To Buy</span>',
+    vietnam: '<span class="badge badge-vietnam">📍 Buy Local</span>',
+  };
+  const badge = item.badge ? badgeMap[item.badge] || '' : '';
+  const noteHTML = item.note ? `<div class="item-note">${item.note}</div>` : '';
+  const badgesHTML = badge ? `<div class="item-badges">${badge}</div>` : '';
+
+  return `
+    <div class="item${item.checked ? ' checked' : ''}" id="item-${item.id}">
+      <div class="checkbox" onclick="toggleItem('${item.id}')"></div>
+      <div class="item-content" onclick="toggleItem('${item.id}')">
+        <div class="item-name">${item.name}</div>
+        ${noteHTML}
+        ${badgesHTML}
+      </div>
+      <button class="item-delete" onclick="deleteItem('${item.id}')" title="Remove">✕</button>
+    </div>
+  `;
+}
+
+function updateSectionSelect() {
+  const sel = document.getElementById('new-item-section');
+  sel.innerHTML = '<option value="">— Category —</option>';
+  sections.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.icon + ' ' + s.name;
+    sel.appendChild(opt);
+  });
+}
+
+// ── ITEMS ──
+function addItem() {
+  const nameEl = document.getElementById('new-item-name');
+  const noteEl = document.getElementById('new-item-note');
+  const secEl  = document.getElementById('new-item-section');
+  const badgeEl = document.getElementById('new-item-badge');
+
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.focus(); return; }
+
+  let sectionId = secEl.value;
+  if (!sectionId && sections.length > 0) sectionId = sections[0].id;
+
+  const item = {
+    id: 'item-' + Date.now(),
+    sectionId,
+    name,
+    note: noteEl.value.trim(),
+    badge: badgeEl.value,
+    checked: false,
+  };
+
+  items.push(item);
+  nameEl.value = '';
+  noteEl.value = '';
+  renderSections();
+  updateProgress();
+  save();
+
+  document.getElementById('share-notice').style.display = 'block';
+}
+
+function toggleItem(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  item.checked = !item.checked;
+
+  const el = document.getElementById('item-' + id);
+  if (el) el.classList.toggle('checked', item.checked);
+
+  const sec = sections.find(s => s.id === item.sectionId);
+  if (sec) {
+    const secItems = items.filter(i => i.sectionId === sec.id);
+    const count = secItems.filter(i => i.checked).length;
+    const countEl = document.querySelector(`#section-${sec.id} .section-count`);
+    if (countEl) countEl.textContent = count + ' / ' + secItems.length;
+  }
+
+  updateProgress();
+  save();
+}
+
+function deleteItem(id) {
+  items = items.filter(i => i.id !== id);
+  renderSections();
+  updateProgress();
+  save();
+}
+
+function deleteSection(id) {
+  if (items.filter(i => i.sectionId === id).length > 0) {
+    if (!confirm('This section has items. Delete anyway?')) return;
+  }
+  sections = sections.filter(s => s.id !== id);
+  items = items.filter(i => i.sectionId !== id);
+  renderSections();
+  updateSectionSelect();
+  updateProgress();
+  save();
+}
+
+function resetAll() {
+  if (!confirm('Reset all ticked items?')) return;
+  items.forEach(i => i.checked = false);
+  renderSections();
+  updateProgress();
+  save();
+}
+
+// ── PROGRESS ──
+function updateProgress() {
+  const total = items.length;
+  const done = items.filter(i => i.checked).length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('packedCount').textContent = done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+// ── ADD SECTION MODAL ──
+function openAddSection() {
+  selectedEmoji = '📦';
+  document.getElementById('new-section-name').value = '';
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = EMOJIS.map(e => `
+    <button class="emoji-btn${e === selectedEmoji ? ' selected' : ''}" onclick="selectEmoji('${e}', this)">${e}</button>
+  `).join('');
+  document.getElementById('sectionModal').classList.add('open');
+  setTimeout(() => document.getElementById('new-section-name').focus(), 100);
+}
+
+function closeAddSection() {
+  document.getElementById('sectionModal').classList.remove('open');
+}
+
+function selectEmoji(e, btn) {
+  selectedEmoji = e;
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function confirmAddSection() {
+  const name = document.getElementById('new-section-name').value.trim();
+  if (!name) { document.getElementById('new-section-name').focus(); return; }
+  const sec = { id: 'sec-' + Date.now(), name, icon: selectedEmoji };
+  sections.push(sec);
+  renderSections();
+  updateSectionSelect();
+  closeAddSection();
+  save();
+}
 </script>
 
 </body>
