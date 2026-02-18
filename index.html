@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trip Packing List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -21,7 +24,8 @@
                 radial-gradient(ellipse at 80% 80%, rgba(232,98,58,0.06) 0%, transparent 50%);
   }
   .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 48px; max-width: 560px; width: 100%; }
-  .setup-logo { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; color: var(--accent); margin-bottom: 4px; }
+  .setup-title { font-family: "Mr De Haviland", cursive, sans-serif; font-size: 48px; letter-spacing: 3px; color: var(--accent); margin-bottom: 4px; text-align: center; }
+  .setup-logo { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 3px; color: var(--accent); margin-bottom: 14px; text-align: center; }
   .setup-sub { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
   .ai-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.1); border: 1px solid rgba(244,166,34,0.25); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; padding: 4px 10px; border-radius: 3px; margin-bottom: 28px; }
   .setup-field { margin-bottom: 18px; }
@@ -163,6 +167,8 @@
   .summary-head-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
   .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
   .summary-item { padding: 14px 16px; border-right: 1px solid var(--border); }
+  .summary-item--destination { padding: 14px 16px; border-right: none; border-bottom: 1px solid var(--border); }
+
   .summary-item:last-child { border-right: none; }
   .summary-item-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
   .summary-item-text { font-size: 12px; color: var(--text); line-height: 1.55; }
@@ -187,7 +193,8 @@
 <!-- ── SETUP ── -->
 <div id="setup-screen">
   <div class="setup-card">
-    <div class="setup-logo">🎒 The Casual Nomad - PACK LIST</div>
+    <div class="setup-title">The Casual Nomad</div>
+    <div class="setup-logo">🎒 PACKING LIST</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
 
@@ -292,14 +299,18 @@
         <span style="color:var(--accent);font-size:11px">✦</span>
         <span class="summary-head-label">Trip Intelligence</span>
       </div>
-      <div class="summary-grid">
-        <div class="summary-item">
+      <div class="summary-item--destination">
           <div class="summary-item-label">🌍 Destination</div>
           <div class="summary-item-text" id="sum-destination"></div>
         </div>
+      <div class="summary-grid">
         <div class="summary-item">
           <div class="summary-item-label">🏃 Activities</div>
           <div class="summary-item-text" id="sum-activities"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">💰 Cost</div>
+          <div class="summary-item-text" id="sum-cost"></div>
         </div>
         <div class="summary-item">
           <div class="summary-item-label">🌤 Climate</div>
@@ -517,8 +528,9 @@ Tags: ${(m.tags||[]).join(', ') || 'none'}
 Return ONLY a JSON object in this exact format:
 {
   "summary": {
-    "destination": "1–2 sentence overview of the country/region and what makes it special for travel",
+    "destination": "2–3 sentence overview of the country/region and what makes it special for travel",
     "activities": "Brief description of the trip's activity style and vibe",
+    "cost": "Estimated daily budget range for mid-range travellers (e.g. $40–$60/day) Include cost-specific tips if relevant (e.g. 'street food is very cheap and a must-try', 'tipping is not customary' etc)",
     "climate": "What weather and climate conditions to expect for the given travel dates"
   },
   "sections": [
@@ -588,6 +600,7 @@ function renderSummary() {
   }
   document.getElementById('sum-destination').textContent = tripSummary.destination || '';
   document.getElementById('sum-activities').textContent  = tripSummary.activities  || '';
+  document.getElementById('sum-cost').textContent        = tripSummary.cost        || '';
   document.getElementById('sum-climate').textContent     = tripSummary.climate     || '';
   bar.style.display = 'block';
 }
