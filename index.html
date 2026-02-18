@@ -153,14 +153,28 @@
   .emoji-btn.selected { border-color: var(--accent); background: rgba(244,166,34,0.1); }
   .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
 
+  /* ── TRIP SUMMARY ── */
+  .summary-bar { max-width: 760px; margin: 16px auto 0; padding: 0 32px; }
+  .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .summary-head { display: flex; align-items: center; gap: 8px; padding: 9px 16px; border-bottom: 1px solid var(--border); background: rgba(244,166,34,0.04); }
+  .summary-head-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .summary-item { padding: 14px 16px; border-right: 1px solid var(--border); }
+  .summary-item:last-child { border-right: none; }
+  .summary-item-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .summary-item-text { font-size: 12px; color: var(--text); line-height: 1.55; }
+
   @media (max-width: 600px) {
     .hero { padding: 32px 20px 28px; }
     .hero-bg-text { font-size: 70px; }
     .main { padding: 24px 20px 0; }
-    .progress-bar, .notice-bar { padding: 0 20px; }
+    .progress-bar, .notice-bar, .summary-bar { padding: 0 20px; }
     .setup-card { padding: 28px 20px; }
     .setup-row { grid-template-columns: 1fr; }
     .add-bar-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .summary-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .summary-item:last-child { border-bottom: none; }
   }
 </style>
 </head>
@@ -267,6 +281,29 @@
     </div>
   </div>
 
+  <div class="summary-bar" id="summary-bar" style="display:none">
+    <div class="summary-card">
+      <div class="summary-head">
+        <span style="color:var(--accent);font-size:11px">✦</span>
+        <span class="summary-head-label">Trip Intelligence</span>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-item-label">🌍 Destination</div>
+          <div class="summary-item-text" id="sum-destination"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">🏃 Activities</div>
+          <div class="summary-item-text" id="sum-activities"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">🌤 Climate</div>
+          <div class="summary-item-text" id="sum-climate"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="main">
     <div class="add-bar">
       <div class="add-bar-title">+ Add Item Manually</div>
@@ -311,11 +348,11 @@
 const EMOJIS = ['👕','🧥','👟','👜','📱','💊','📄','🏕️','🧴','🔦','⚡','🎒','🛏️','📦','🍽️','💰','📷','🗺️','🧳','🎿','🏊','🚴','🏔️','🌊','🎧','💻','🔑','🪥','🩹','🧢','☀️','🕶️','🔋','🗝️','🩺'];
 const STORAGE_KEY = 'packListData_v2';
 
-let sections = [], items = [], tripMeta = {}, tags = [], selectedEmoji = '📦';
+let sections = [], items = [], tripMeta = {}, tripSummary = {}, tags = [], selectedEmoji = '📦';
 
 // ── STORAGE ──
 function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ tripMeta, sections, items })); } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ tripMeta, tripSummary, sections, items })); } catch(e) {}
 }
 function loadSaved() {
   try {
@@ -323,7 +360,7 @@ function loadSaved() {
     if (!raw) return false;
     const d = JSON.parse(raw);
     if (!d.tripMeta || !d.sections) return false;
-    tripMeta = d.tripMeta; sections = d.sections; items = d.items || [];
+    tripMeta = d.tripMeta; tripSummary = d.tripSummary || {}; sections = d.sections; items = d.items || [];
     tags = [...(tripMeta.tags || [])];
     return true;
   } catch(e) { return false; }
@@ -340,7 +377,7 @@ function show(id) {
 // ── BOOT ──
 window.addEventListener('DOMContentLoaded', () => {
   if (loadSaved()) {
-    renderHero(); renderSections(); updateSectionSelect(); updateProgress();
+    renderHero(); renderSummary(); renderSections(); updateSectionSelect(); updateProgress();
     show('app');
   }
   document.getElementById('s-tag-input').addEventListener('keydown', e => { if (e.key==='Enter'){e.preventDefault();addTag();} });
@@ -376,7 +413,7 @@ function editTrip() {
 
 function startFresh() {
   if (!confirm('Clear everything and start a new list?')) return;
-  clearSaved(); sections=[]; items=[]; tripMeta={}; tags=[];
+  clearSaved(); sections=[]; items=[]; tripMeta={}; tripSummary={}; tags=[];
   ['s-destination','s-bag','s-dates','s-duration','s-activities','s-extra'].forEach(id => document.getElementById(id).value = '');
   renderTags(); show('setup-screen');
 }
@@ -433,6 +470,7 @@ async function generateList() {
     await new Promise(r => setTimeout(r, 700));
 
     // Load generated data
+    tripSummary = parsed.summary || {};
     sections = parsed.sections.map((s, i) => ({ id: 'sec-'+i, name: s.name, icon: s.icon || '📦' }));
     items = [];
     parsed.sections.forEach((s, si) => {
@@ -442,7 +480,7 @@ async function generateList() {
     });
 
     save();
-    renderHero(); renderSections(); updateSectionSelect(); updateProgress();
+    renderHero(); renderSummary(); renderSections(); updateSectionSelect(); updateProgress();
     show('app');
 
   } catch(err) {
@@ -467,6 +505,11 @@ Tags: ${(m.tags||[]).join(', ') || 'none'}
 
 Return ONLY a JSON object in this exact format:
 {
+  "summary": {
+    "destination": "1–2 sentence overview of the country/region and what makes it special for travel",
+    "activities": "Brief description of the trip's activity style and vibe",
+    "climate": "What weather and climate conditions to expect for the given travel dates"
+  },
   "sections": [
     {
       "name": "Section Name",
@@ -495,7 +538,8 @@ Guidelines:
 - For hot/humid climates: prioritise lightweight quick-dry fabrics, strong sun/insect protection
 - For adventure activities: include specific gear for those activities
 - Be opinionated and practical — give real recommendations not generic placeholders
-- Be cheerful and encouraging in the tone of the item notes, like a knowledgeable friend who’s excited for the trip
+- Be cheerful and encouraging in the tone of the item notes, like a knowledgeable friend who's excited for the trip
+- For the summary fields: be concise but vivid — destination is 1-2 sentences max, activities and climate are 1 sentence each
 - ONLY return the JSON object, nothing else`;
 }
 
@@ -523,6 +567,18 @@ function renderHero() {
   t.forEach(tag => m+=`<span>📍 <strong>${tag}</strong></span>`);
   document.getElementById('h-meta').innerHTML = m;
   document.title = `${dest} — Pack List`;
+}
+
+// ── TRIP SUMMARY ──
+function renderSummary() {
+  const bar = document.getElementById('summary-bar');
+  if (!tripSummary || (!tripSummary.destination && !tripSummary.activities && !tripSummary.climate)) {
+    bar.style.display = 'none'; return;
+  }
+  document.getElementById('sum-destination').textContent = tripSummary.destination || '';
+  document.getElementById('sum-activities').textContent  = tripSummary.activities  || '';
+  document.getElementById('sum-climate').textContent     = tripSummary.climate     || '';
+  bar.style.display = 'block';
 }
 
 // ── SECTIONS & ITEMS ──
