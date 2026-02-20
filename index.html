@@ -206,20 +206,25 @@
       <label>Destination / Trip Name</label>
       <input type="text" id="s-destination" placeholder="e.g. Vietnam, Iceland, Morocco" maxlength="60">
     </div>
-
+    <div class="setup-row">
     <div class="setup-field">
       <label>Bag / Kit</label>
-      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead 35L, Cotopaxi Allpa, etc" maxlength="60">
+      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead, Cotopaxi Allpa, etc" maxlength="60">
+    </div>
+    <div class="setup-field">
+      <label>Luggage Size (Estimate)</label>
+      <input type="text" id="s-bag-size" placeholder="e.g. 35L, 40L, 50L" maxlength="60">
+    </div>
     </div>
 
     <div class="setup-row">
       <div class="setup-field">
         <label>Travel Dates / Season</label>
-        <input type="text" id="s-dates" placeholder="e.g. Mar – Apr 2026" maxlength="30">
+        <input type="text" id="s-dates" placeholder="e.g. Mar – Apr, Autumn - Winter, etc" maxlength="30">
       </div>
       <div class="setup-field">
         <label>Duration</label>
-        <input type="text" id="s-duration" placeholder="e.g. 4 weeks" maxlength="20">
+        <input type="text" id="s-duration" placeholder="e.g. 2 Weeks, 1 Month, etc" maxlength="20">
       </div>
     </div>
 
@@ -231,15 +236,6 @@
     <div class="setup-field">
       <label>Anything else? <span style="color:var(--muted);font-size:10px">(climate, one-bag, personal needs)</span></label>
       <textarea id="s-extra" rows="2" placeholder="e.g. Hot and humid. I run hot and sweat a lot. No checked luggage."></textarea>
-    </div>
-
-    <div class="setup-field">
-      <label>Trip Tags <span style="color:var(--muted);font-size:10px">(optional, press Enter)</span></label>
-      <div class="meta-tag-input">
-        <input type="text" id="s-tag-input" placeholder="e.g. Intrepid Basix tour" maxlength="40">
-        <button class="btn btn-outline btn-sm" onclick="addTag()">Add</button>
-      </div>
-      <div class="meta-tags" id="s-tags"></div>
     </div>
 
     <button class="btn" style="width:100%;margin-top:8px;font-size:14px" onclick="generateList()" id="generate-btn">
@@ -333,10 +329,7 @@
     <div id="sections-container"></div>
     <button class="add-section-btn" onclick="openAddSection()">+ Add Category</button>
     <button class="add-section-btn" onclick="openAddItem()">+ Add Item Manually</button>
-
-  </div>
-
-  <div class="add-bar" id="add-bar" style="display:none"> 
+    <div class="add-bar" id="add-bar" style="display:none"> 
     <div class="add-bar-inner">
       <div class="add-bar-title">+ Add Item Manually</div>
       <div class="add-bar-row">
@@ -348,10 +341,13 @@
           <option value="key">🔥 Key Item</option>
           <option value="buy">🛒 To Buy</option>
           <option value="local">📍 Buy Local</option>
+          <option value="hire">🤝 Hire Locally</option>
         </select>
         <button class="btn btn-sm" onclick="addItem()">Add</button>
       </div>
     </div>
+  </div>
+
   </div>
 </div>
 
@@ -480,11 +476,11 @@ async function generateList() {
   tripMeta = {
     dest,
     bag:        document.getElementById('s-bag').value.trim(),
+    capacity:   document.getElementById('s-bag-size').value.trim(),
     dates:      document.getElementById('s-dates').value.trim(),
     duration:   document.getElementById('s-duration').value.trim(),
     activities: document.getElementById('s-activities').value.trim(),
-    extra:      document.getElementById('s-extra').value.trim(),
-    tags:       [...tags]
+    extra:      document.getElementById('s-extra').value.trim()
   };
 
   document.getElementById('generate-btn').disabled = true;
@@ -546,11 +542,11 @@ function buildPrompt(m) {
 
 Destination: ${m.dest}
 Bag/Kit: ${m.bag || 'not specified'}
+Bag capacity/size: ${m.capacity || 'not specified'}
 Travel dates/season: ${m.dates || 'not specified'}
 Duration: ${m.duration || 'not specified'}
 Activities & trip style: ${m.activities || 'general travel'}
 Additional notes: ${m.extra || 'none'}
-Tags: ${(m.tags||[]).join(', ') || 'none'}
 
 Return ONLY a JSON object in this exact format:
 {
@@ -568,14 +564,14 @@ Return ONLY a JSON object in this exact format:
         {
           "name": "Item name with quantity if helpful e.g. T-shirts x3",
           "note": "Short specific tip for this trip (max 12 words, destination-specific, not generic)",
-          "badge": "key|buy|local|"
+          "badge": "key|buy|local|hire"
         }
       ]
     }
   ]
 }
 
-Badge rules: "key" = essential item, "buy" = buy before trip, "local" = buy at destination, "" = standard item.
+Badge rules: "key" = essential item, "buy" = buy before trip, "local" = buy at destination, "hire" = hire at destination, "" = standard item.
 
 Guidelines:
 - 6-10 sections tailored to this specific trip
@@ -586,8 +582,10 @@ Guidelines:
 - For one-bag/carry-on: suggest versatile multi-use items, note laundry strategy
 - Check the climate and season of the destination and travel dates and adjust clothing/gear recommendations accordingly
 - For hot/humid climates: prioritise lightweight quick-dry fabrics, strong sun/insect protection
-- For adventure activities: include specific gear for those activities, if not available locally or from rental providers or tour operators
+- For adventure activities: include specific gear for those activities unless you can hire locally from rental providers or tour operators
 - Use your knowledge of the supplied bag/kit to tailor recommendations (e.g. if they have a 35L backpack, suggest compact packing strategies and versatile items)
+- Estimate the weight of each item and keep the total weight in mind based on the bag capacity/size if provided
+- include the estimated weight of each item in the note field, e.g. "weighs approx 400g, consider packing if you have room"
 - Be opinionated and practical — give real recommendations not generic placeholders
 - Be cheerful and encouraging in the tone of the item notes, like a knowledgeable friend who's excited for the trip
 - For the summary fields: be concise but vivid — destination is 1-2 sentences max, activities and climate are 1 sentence each

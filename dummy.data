@@ -1,0 +1,23 @@
+// Skip setup & generation, go straight to the app view
+document.getElementById('setup-screen').style.display = 'none';
+document.getElementById('generating-screen').style.display = 'none';
+document.getElementById('app').style.display = 'block';
+
+// Populate with dummy data so it renders properly
+sections = [
+  { id: 'sec-1', name: 'Clothing', icon: '👕' },
+  { id: 'sec-2', name: 'Electronics', icon: '🔌' }
+];
+items = [
+  { id: 'item-1', sectionId: 'sec-1', name: 'T-Shirts', note: 'x3 merino wool', badge: 'key', checked: false },
+  { id: 'item-2', sectionId: 'sec-1', name: 'Rain Jacket', note: '', badge: '', checked: true },
+  { id: 'item-3', sectionId: 'sec-2', name: 'Phone Charger', note: 'USB-C', badge: 'buy', checked: false }
+];
+tripSummary = { destination: "Ireland is a land of emerald landscapes, ancient stone circles, and vibrant cultural heritage where misty coastlines meet rolling green hills. May offers the perfect shoulder season—mild weather, long daylight hours, and fewer crowds than summer.", activities: 'Motorbike, beaches', climate: 'Hot & humid', cost: 'Budget' };
+
+// Re-render everything
+document.getElementById('h-destination').innerHTML = 'MY<br><span style="color:var(--accent)">VIETNAM</span>';
+document.getElementById('h-bag').textContent = 'Kathmandu 35L';
+renderSections();
+renderSummary();
+updateProgress();
