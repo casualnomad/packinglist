@@ -201,25 +201,28 @@
     <div class="setup-logo">🎒 PACKING LIST 👜</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
+    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github Dev v0.9</a>
 
     <div class="setup-field">
-      <label>Destination / Trip Name</label>
+      <label>Destination / Trip Type</label>
       <input type="text" id="s-destination" placeholder="e.g. Vietnam, Iceland, Morocco" maxlength="60">
     </div>
-
     <div class="setup-field">
       <label>Bag / Kit</label>
-      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead 35L, Cotopaxi Allpa, etc" maxlength="60">
+      <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead, Cotopaxi Allpa, etc" maxlength="60">
     </div>
-
+    <div class="setup-field">
+    <label>Weight Limit <span style="color:var(--muted);font-size:10px"> - Total travel weight in KG</span></label>
+      <input type="number" id="s-bag-size" placeholder="e.g. 7KG, 23KG" maxlength="60">
+    </div>
     <div class="setup-row">
       <div class="setup-field">
         <label>Travel Dates / Season</label>
-        <input type="text" id="s-dates" placeholder="e.g. Mar – Apr 2026" maxlength="30">
+        <input type="text" id="s-dates" placeholder="e.g. Mar – Apr, Autumn - Winter, etc" maxlength="30">
       </div>
       <div class="setup-field">
         <label>Duration</label>
-        <input type="text" id="s-duration" placeholder="e.g. 4 weeks" maxlength="20">
+        <input type="text" id="s-duration" placeholder="e.g. 2 Weeks, 1 Month, etc" maxlength="20">
       </div>
     </div>
 
@@ -233,21 +236,11 @@
       <textarea id="s-extra" rows="2" placeholder="e.g. Hot and humid. I run hot and sweat a lot. No checked luggage."></textarea>
     </div>
 
-    <div class="setup-field">
-      <label>Trip Tags <span style="color:var(--muted);font-size:10px">(optional, press Enter)</span></label>
-      <div class="meta-tag-input">
-        <input type="text" id="s-tag-input" placeholder="e.g. Intrepid Basix tour" maxlength="40">
-        <button class="btn btn-outline btn-sm" onclick="addTag()">Add</button>
-      </div>
-      <div class="meta-tags" id="s-tags"></div>
-    </div>
-
     <button class="btn" style="width:100%;margin-top:8px;font-size:14px" onclick="generateList()" id="generate-btn">
       ✦ Generate My Packing List
     </button>
   </div>
 </div>
-<div class="version-badge">Github Prod v0.6.2</div>
 
 <!-- ── GENERATING ── -->
 <div id="generating-screen">
@@ -270,12 +263,13 @@
 <div id="app">
   <div class="hero">
     <div class="hero-inner">
-      <div class="trip-tag">🎒 <span id="h-bag">One Bag</span></div>
+      <div class="trip-tag">🎒 <span id="h-bag"></span><span id="s-bag"></span></div>
       <h1 id="h-destination">MY<br><span>TRIP</span></h1>
       <div class="hero-meta" id="h-meta"></div>
       <div class="hero-actions">
         <button class="btn btn-outline btn-sm" onclick="resetAll()">↺ Reset All Ticks</button>
-        <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Details</button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">↓ Export CSV</button>
+        <!-- <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Details</button> -->
         <button class="btn btn-outline btn-sm" onclick="regenList()" style="color:var(--accent);border-color:rgba(244,166,34,0.3)">✦ Regenerate</button>
         <button class="btn btn-outline btn-sm" onclick="startFresh()" style="color:var(--red);border-color:rgba(232,79,79,0.4)">✕ Start Fresh</button>
       </div>
@@ -286,9 +280,13 @@
   <div class="progress-bar">
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-label">
-      <span>Packed <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
+      <span>Packed: <strong id="packedCount">0</strong> of <strong id="totalCount">0</strong> items</span>
       <span id="progressPct" style="color:var(--accent)">0%</span>
     </div>
+    <div class="progress-label">
+      <span>Weight: <strong id="packedWeight">0</strong> of <strong id="totalWeight">0</strong></span>
+      <span id="weightPct" style="color:var(--accent)">0 Grams</span>
+      </div>
   </div>
 
   <div class="notice-bar" id="notice-bar">
@@ -333,14 +331,12 @@
     <div id="sections-container"></div>
     <button class="add-section-btn" onclick="openAddSection()">+ Add Category</button>
     <button class="add-section-btn" onclick="openAddItem()">+ Add Item Manually</button>
-
-  </div>
-
-  <div class="add-bar" id="add-bar" style="display:none"> 
+    <div class="add-bar" id="add-bar" style="display:none"> 
     <div class="add-bar-inner">
       <div class="add-bar-title">+ Add Item Manually</div>
       <div class="add-bar-row">
         <input class="item-name-input" type="text" id="new-item-name" placeholder="Item name" maxlength="80">
+        <input class="item-name-input" type="number" id="new-item-weight" placeholder="Weight (grams)" maxlength="10">
         <input class="item-note-input" type="text" id="new-item-note" placeholder="Optional note" maxlength="120">
         <select id="new-item-section"><option value="">— Category —</option></select>
         <select id="new-item-badge">
@@ -348,10 +344,13 @@
           <option value="key">🔥 Key Item</option>
           <option value="buy">🛒 To Buy</option>
           <option value="local">📍 Buy Local</option>
+          <option value="hire">🤝 Hire Locally</option>
         </select>
         <button class="btn btn-sm" onclick="addItem()">Add</button>
       </div>
     </div>
+  </div>
+
   </div>
 </div>
 
@@ -378,7 +377,7 @@
 const EMOJIS = ['👕','🧥','👟','👜','📱','💊','📄','🏕️','🧴','🔦','⚡','🎒','🛏️','📦','🍽️','💰','📷','🗺️','🧳','🎿','🏊','🚴','🏔️','🌊','🎧','💻','🔑','🪥','🩹','🧢','☀️','🕶️','🔋','🗝️','🩺'];
 const STORAGE_KEY = 'packListData_v2';
 
-let sections = [], items = [], tripMeta = {}, tripSummary = {}, tags = [], selectedEmoji = '📦';
+let sections = [], items = [], tripMeta = {}, tripSummary = {}, selectedEmoji = '📦';
 
 // ── STORAGE ──
 function save() {
@@ -391,7 +390,6 @@ function loadSaved() {
     const d = JSON.parse(raw);
     if (!d.tripMeta || !d.sections) return false;
     tripMeta = d.tripMeta; tripSummary = d.tripSummary || {}; sections = d.sections; items = d.items || [];
-    tags = [...(tripMeta.tags || [])];
     return true;
   } catch(e) { return false; }
 }
@@ -410,7 +408,6 @@ window.addEventListener('DOMContentLoaded', () => {
     renderHero(); renderSummary(); renderSections(); updateSectionSelect(); updateProgress();
     show('app');
   }
-  document.getElementById('s-tag-input').addEventListener('keydown', e => { if (e.key==='Enter'){e.preventDefault();addTag();} });
   document.getElementById('new-item-name').addEventListener('keydown', e => { if (e.key==='Enter') addItem(); });
   document.getElementById('new-section-name').addEventListener('keydown', e => { if(e.key==='Enter') confirmAddSection(); if(e.key==='Escape') closeAddSection(); });
   document.getElementById('sectionModal').addEventListener('click', e => { if(e.target===document.getElementById('sectionModal')) closeAddSection(); });
@@ -422,31 +419,14 @@ function dismissNotice() { document.getElementById('notice-bar').style.display =
 
 // ── INTEL ──
 function dismissIntel() { document.getElementById('summary-destination').style.display = 'none';
-                          document.getElementById('summary-destination').style.display = 'none';
-                          document.getElementById('summary-destination').style.display = 'none';
                           document.getElementById('intel-hide-btn').onclick = function() { showIntel(); };
                           document.getElementById('intel-hide-btn').textContent = '+';
                           
  }
  function showIntel() { document.getElementById('summary-destination').style.display = 'block';
-                        document.getElementById('summary-destination').style.display = 'block';
-                        document.getElementById('summary-destination').style.display = 'block';
                         document.getElementById('intel-hide-btn').onclick = function() { dismissIntel(); };
                         document.getElementById('intel-hide-btn').textContent = 'x';
  }
-
-// ── TAGS ──
-function addTag() {
-  const el = document.getElementById('s-tag-input');
-  const v = el.value.trim(); if (!v) return;
-  tags.push(v); renderTags(); el.value = '';
-}
-function renderTags() {
-  document.getElementById('s-tags').innerHTML = tags.map((t,i) =>
-    `<span class="meta-tag" onclick="removeTag(${i})">${t} <span class="remove">×</span></span>`
-  ).join('');
-}
-function removeTag(i) { tags.splice(i,1); renderTags(); }
 
 // ── SETUP / EDIT / FRESH ──
 function editTrip() {
@@ -456,19 +436,20 @@ function editTrip() {
   document.getElementById('s-duration').value = tripMeta.duration || '';
   document.getElementById('s-activities').value = tripMeta.activities || '';
   document.getElementById('s-extra').value = tripMeta.extra || '';
-  tags = [...(tripMeta.tags||[])]; renderTags();
+  document.getElementById('s-bag-size').value = tripMeta.capacity || '';
   show('setup-screen');
 }
 
 function startFresh() {
   if (!confirm('Clear everything and start a new list?')) return;
-  clearSaved(); sections=[]; items=[]; tripMeta={}; tripSummary={}; tags=[];
-  ['s-destination','s-bag','s-dates','s-duration','s-activities','s-extra'].forEach(id => document.getElementById(id).value = '');
-  renderTags(); show('setup-screen');
+  clearSaved(); sections=[]; items=[]; tripMeta={}; tripSummary={};
+  ['s-destination','s-bag','s-dates','s-duration','s-activities','s-extra','s-bag-size'].forEach(id => document.getElementById(id).value = '');
+  show('setup-screen');
 }
 
 function regenList() {
   if (!confirm('Regenerate the list from AI? Your current items will be replaced.')) return;
+  document.getElementById('generate-btn').disabled = false;
   editTrip();
 }
 
@@ -480,11 +461,11 @@ async function generateList() {
   tripMeta = {
     dest,
     bag:        document.getElementById('s-bag').value.trim(),
+    capacity:   document.getElementById('s-bag-size').value.trim(),
     dates:      document.getElementById('s-dates').value.trim(),
     duration:   document.getElementById('s-duration').value.trim(),
     activities: document.getElementById('s-activities').value.trim(),
-    extra:      document.getElementById('s-extra').value.trim(),
-    tags:       [...tags]
+    extra:      document.getElementById('s-extra').value.trim()
   };
 
   document.getElementById('generate-btn').disabled = true;
@@ -524,7 +505,7 @@ async function generateList() {
     items = [];
     parsed.sections.forEach((s, si) => {
       (s.items || []).forEach((item, ii) => {
-        items.push({ id: `i-${si}-${ii}`, sectionId: 'sec-'+si, name: item.name, note: item.note || '', badge: item.badge || '', checked: false });
+        items.push({ id: `i-${si}-${ii}`, sectionId: 'sec-'+si, name: item.name, note: item.note || '', weight: item.weight || 0, badge: item.badge || '', checked: false });
       });
     });
 
@@ -546,11 +527,11 @@ function buildPrompt(m) {
 
 Destination: ${m.dest}
 Bag/Kit: ${m.bag || 'not specified'}
+Weight limit (KG): ${m.capacity || 'not specified'}
 Travel dates/season: ${m.dates || 'not specified'}
 Duration: ${m.duration || 'not specified'}
 Activities & trip style: ${m.activities || 'general travel'}
 Additional notes: ${m.extra || 'none'}
-Tags: ${(m.tags||[]).join(', ') || 'none'}
 
 Return ONLY a JSON object in this exact format:
 {
@@ -568,14 +549,15 @@ Return ONLY a JSON object in this exact format:
         {
           "name": "Item name with quantity if helpful e.g. T-shirts x3",
           "note": "Short specific tip for this trip (max 12 words, destination-specific, not generic)",
-          "badge": "key|buy|local|"
+          "weight": "estimated weight in grams (e.g. 400) ONLY return a number here, no units or text, if hireable or buy locally and not packing, set to 0",
+          "badge": "key|buy|local|hire"
         }
       ]
     }
   ]
 }
 
-Badge rules: "key" = essential item, "buy" = buy before trip, "local" = buy at destination, "" = standard item.
+Badge rules: "key" = essential item, "buy" = buy before trip, "local" = buy at destination, "hire" = hire at destination, "" = standard item.
 
 Guidelines:
 - 6-10 sections tailored to this specific trip
@@ -586,8 +568,10 @@ Guidelines:
 - For one-bag/carry-on: suggest versatile multi-use items, note laundry strategy
 - Check the climate and season of the destination and travel dates and adjust clothing/gear recommendations accordingly
 - For hot/humid climates: prioritise lightweight quick-dry fabrics, strong sun/insect protection
-- For adventure activities: include specific gear for those activities, if not available locally or from rental providers or tour operators
-- Use your knowledge of the supplied bag/kit to tailor recommendations (e.g. if they have a 35L backpack, suggest compact packing strategies and versatile items)
+- For adventure activities: include specific gear for those activities unless you can hire locally from rental providers or tour operators
+- Always assume that tour activies will provide basic safety gear (e.g. helmet for motorbiking, wetsuit for diving), and add a hire badge for these items with a note to confirm with the provider 
+- Use your knowledge of the supplied bag/kit to tailor recommendations (e.g. if they have a small backpack, suggest compact packing strategies and versatile items)
+- Estimate the weight of each item and keep the total weight in mind based on the bag capacity/size if provided
 - Be opinionated and practical — give real recommendations not generic placeholders
 - Be cheerful and encouraging in the tone of the item notes, like a knowledgeable friend who's excited for the trip
 - For the summary fields: be concise but vivid — destination is 1-2 sentences max, activities and climate are 1 sentence each
@@ -605,17 +589,17 @@ function advanceStep(n) {
 
 // ── HERO ──
 function renderHero() {
-  const { dest='My Trip', bag, dates, duration, tags:t=[] } = tripMeta;
+  const { dest='My Trip', bag, capacity, dates, duration } = tripMeta;
   const words = dest.toUpperCase().split(' ');
   const mid = Math.ceil(words.length/2);
   const l1 = words.slice(0,mid).join(' '), l2 = words.slice(mid).join(' ');
   document.getElementById('h-destination').innerHTML = l2 ? `${l1}<br><span>${l2}</span>` : `<span>${l1}</span>`;
   document.getElementById('h-bg-text').textContent = dest.toUpperCase();
   document.getElementById('h-bag').textContent = bag || 'One Bag';
+  document.getElementById('s-bag').textContent = capacity || '' ;
   let m='';
   if (dates) m+=`<span>📅 <strong>${dates}</strong></span>`;
   if (duration) m+=`<span>⏱ <strong>${duration}</strong></span>`;
-  t.forEach(tag => m+=`<span>📍 <strong>${tag}</strong></span>`);
   document.getElementById('h-meta').innerHTML = m;
   document.title = `${dest} — Pack List`;
 }
@@ -657,16 +641,16 @@ function renderSections() {
 }
 
 function renderItemHTML(item) {
-  const bm = { key:'<span class="badge badge-key">🔥 Key Item</span>', buy:'<span class="badge badge-buy">🛒 To Buy</span>', local:'<span class="badge badge-local">📍 Buy Local</span>' };
+  const bm = { key:'<span class="badge badge-key">🔥 Key Item</span>', buy:'<span class="badge badge-buy">🛒 To Buy</span>', local:'<span class="badge badge-local">📍 Buy Local</span>', hire:'<span class="badge badge-hire">🤝 Hire</span>' };
   const badge = item.badge ? (bm[item.badge]||'') : '';
+  const weight = item.weight && item.weight != 0 ? `<span class="badge badge-buy">⚖️ ${item.weight}g</span>` : '';
   return `
     <div class="item${item.checked?' checked':''}" id="item-${item.id}">
       <div class="checkbox" onclick="toggleItem('${item.id}')"></div>
       <div class="item-content" onclick="toggleItem('${item.id}')">
         <div class="item-name">${item.name}</div>
         ${item.note?`<div class="item-note">${item.note}</div>`:''}
-        ${badge?`<div class="item-badges">${badge}</div>`:''}
-      </div>
+        ${(badge||weight)?`<div class="item-badges">${badge}${weight}</div>`:''}</div>
       <button class="item-delete" onclick="deleteItem('${item.id}')" title="Remove">✕</button>
     </div>`;
 }
@@ -678,11 +662,11 @@ function updateSectionSelect() {
 }
 
 function addItem() {
-  const n=document.getElementById('new-item-name'), nt=document.getElementById('new-item-note'), se=document.getElementById('new-item-section'), bd=document.getElementById('new-item-badge');
+  const n=document.getElementById('new-item-name'), nt=document.getElementById('new-item-note'), se=document.getElementById('new-item-section'), bd=document.getElementById('new-item-badge'), wt=document.getElementById('new-item-weight');
   const name=n.value.trim(); if(!name){n.focus();return;}
   let sid=se.value; if(!sid&&sections.length>0) sid=sections[0].id;
-  items.push({id:'item-'+Date.now(),sectionId:sid,name,note:nt.value.trim(),badge:bd.value,checked:false});
-  n.value=''; nt.value='';
+  items.push({id:'item-'+Date.now(),sectionId:sid,name,note:nt.value.trim(),badge:bd.value,weight:wt.value.trim(),checked:false});
+  n.value=''; nt.value=''; wt.value='';
   renderSections(); updateProgress(); save();
 }
 
@@ -714,6 +698,53 @@ function updateProgress() {
   document.getElementById('packedCount').textContent=done;
   document.getElementById('totalCount').textContent=total;
   document.getElementById('progressPct').textContent=pct+'%';
+  
+  // Weight progress
+  const toGrams = w => {const n = parseInt(w); return isNaN(n) ? 0 : n;};
+  const totalGrams = items.reduce((sum, i) => sum + toGrams(i.weight), 0);
+  const packedGrams = items.filter(i => i.checked).reduce((sum, i) => sum + toGrams(i.weight), 0);
+  const fmt = g => g >= 1000 ? (g/1000).toFixed(1)+' kg' : g+' g';
+
+  //Weight goal
+  const goalRaw = (tripMeta.capacity || '').toLowerCase().replace('kg', '').trim();
+  const goalGrams = goalRaw ? parseFloat(goalRaw) * 1000 : null;
+  const ratio = goalGrams ? totalGrams / goalGrams : null;
+
+  document.getElementById('packedWeight').textContent=fmt(packedGrams);
+  document.getElementById('totalWeight').textContent  = goalGrams ? fmt(goalGrams) : fmt(totalGrams);
+
+  const weightPct = goalGrams ? Math.round(packedGrams / goalGrams * 100) : 0;
+  const weightPctEl = document.getElementById('weightPct');
+  weightPctEl.textContent = weightPct + '%';
+  weightPctEl.style.color = !goalGrams    ? 'var(--accent)'
+                          : ratio < 0.8   ? 'var(--green)'
+                          : ratio < 1.0   ? 'var(--accent)'
+                          : 'var(--red)';
+}
+
+// --CSV Export --
+
+function exportCSV() {
+  const headers = ['Category', 'Item', 'Note', 'Weight (g)', 'Packed'];
+  const rows = items.map(item => {
+    const section = sections.find(s => s.id === item.sectionId);
+    return [
+      section ? section.name : '',
+      item.name,
+      item.note || '',
+      item.weight || 0,
+      item.checked ? 'Yes' : 'No'
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${tripMeta.dest || 'packing-list'}-packing-list.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ── MODAL ──
