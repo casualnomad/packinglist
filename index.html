@@ -201,6 +201,7 @@
     <div class="setup-logo">🎒 PACKING LIST 👜</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
+    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github Dev v0.9</a>
 
     <div class="setup-field">
       <label>Destination / Trip Type</label>
@@ -211,7 +212,7 @@
       <input type="text" id="s-bag" placeholder="e.g. Kathmandu Trailhead, Cotopaxi Allpa, etc" maxlength="60">
     </div>
     <div class="setup-field">
-    <label>Weight Goal <span style="color:var(--muted);font-size:10px"> - Total travel weight in KG</span></label>
+    <label>Weight Limit <span style="color:var(--muted);font-size:10px"> - Total travel weight in KG</span></label>
       <input type="number" id="s-bag-size" placeholder="e.g. 7KG, 23KG" maxlength="60">
     </div>
     <div class="setup-row">
@@ -240,7 +241,6 @@
     </button>
   </div>
 </div>
-<div class="version-badge">Github Dev v0.9</div>
 
 <!-- ── GENERATING ── -->
 <div id="generating-screen">
@@ -268,6 +268,7 @@
       <div class="hero-meta" id="h-meta"></div>
       <div class="hero-actions">
         <button class="btn btn-outline btn-sm" onclick="resetAll()">↺ Reset All Ticks</button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">↓ Export CSV</button>
         <!-- <button class="btn btn-outline btn-sm" onclick="editTrip()">✏ Edit Details</button> -->
         <button class="btn btn-outline btn-sm" onclick="regenList()" style="color:var(--accent);border-color:rgba(244,166,34,0.3)">✦ Regenerate</button>
         <button class="btn btn-outline btn-sm" onclick="startFresh()" style="color:var(--red);border-color:rgba(232,79,79,0.4)">✕ Start Fresh</button>
@@ -418,15 +419,11 @@ function dismissNotice() { document.getElementById('notice-bar').style.display =
 
 // ── INTEL ──
 function dismissIntel() { document.getElementById('summary-destination').style.display = 'none';
-                          document.getElementById('summary-destination').style.display = 'none';
-                          document.getElementById('summary-destination').style.display = 'none';
                           document.getElementById('intel-hide-btn').onclick = function() { showIntel(); };
                           document.getElementById('intel-hide-btn').textContent = '+';
                           
  }
  function showIntel() { document.getElementById('summary-destination').style.display = 'block';
-                        document.getElementById('summary-destination').style.display = 'block';
-                        document.getElementById('summary-destination').style.display = 'block';
                         document.getElementById('intel-hide-btn').onclick = function() { dismissIntel(); };
                         document.getElementById('intel-hide-btn').textContent = 'x';
  }
@@ -447,6 +444,7 @@ function startFresh() {
   if (!confirm('Clear everything and start a new list?')) return;
   clearSaved(); sections=[]; items=[]; tripMeta={}; tripSummary={};
   ['s-destination','s-bag','s-dates','s-duration','s-activities','s-extra','s-bag-size'].forEach(id => document.getElementById(id).value = '');
+  show('setup-screen');
 }
 
 function regenList() {
@@ -528,7 +526,7 @@ function buildPrompt(m) {
 
 Destination: ${m.dest}
 Bag/Kit: ${m.bag || 'not specified'}
-Bag capacity/size: ${m.capacity || 'not specified'}
+Weight limit (KG): ${m.capacity || 'not specified'}
 Travel dates/season: ${m.dates || 'not specified'}
 Duration: ${m.duration || 'not specified'}
 Activities & trip style: ${m.activities || 'general travel'}
@@ -590,14 +588,14 @@ function advanceStep(n) {
 
 // ── HERO ──
 function renderHero() {
-  const { dest='My Trip', bag, size, dates, duration } = tripMeta;
+  const { dest='My Trip', bag, capacity, dates, duration } = tripMeta;
   const words = dest.toUpperCase().split(' ');
   const mid = Math.ceil(words.length/2);
   const l1 = words.slice(0,mid).join(' '), l2 = words.slice(mid).join(' ');
   document.getElementById('h-destination').innerHTML = l2 ? `${l1}<br><span>${l2}</span>` : `<span>${l1}</span>`;
   document.getElementById('h-bg-text').textContent = dest.toUpperCase();
   document.getElementById('h-bag').textContent = bag || 'One Bag';
-  document.getElementById('s-bag').textContent = size || '' ;
+  document.getElementById('s-bag').textContent = capacity || '' ;
   let m='';
   if (dates) m+=`<span>📅 <strong>${dates}</strong></span>`;
   if (duration) m+=`<span>⏱ <strong>${duration}</strong></span>`;
@@ -710,11 +708,6 @@ function updateProgress() {
   const goalRaw = (tripMeta.capacity || '').toLowerCase().replace('kg', '').trim();
   const goalGrams = goalRaw ? parseFloat(goalRaw) * 1000 : null;
   const ratio = goalGrams ? totalGrams / goalGrams : null;
-  const goalColour = !ratio ? 'var(--text)'
-                    : ratio < 0.8 ? 'var(--green)'
-                    : ratio < 1.0 ? 'var(--accent)'
-                    : 'var(--red)';
-
 
   document.getElementById('packedWeight').textContent=fmt(packedGrams);
   document.getElementById('totalWeight').textContent  = goalGrams ? fmt(goalGrams) : fmt(totalGrams);
@@ -726,6 +719,31 @@ function updateProgress() {
                           : ratio < 0.8   ? 'var(--green)'
                           : ratio < 1.0   ? 'var(--accent)'
                           : 'var(--red)';
+}
+
+// --CSV Export --
+
+function exportCSV() {
+  const headers = ['Category', 'Item', 'Note', 'Weight (g)', 'Packed'];
+  const rows = items.map(item => {
+    const section = sections.find(s => s.id === item.sectionId);
+    return [
+      section ? section.name : '',
+      item.name,
+      item.note || '',
+      item.weight || 0,
+      item.checked ? 'Yes' : 'No'
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${tripMeta.dest || 'packing-list'}-packing-list.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ── MODAL ──
