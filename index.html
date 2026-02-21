@@ -407,7 +407,6 @@ window.addEventListener('DOMContentLoaded', () => {
     renderHero(); renderSummary(); renderSections(); updateSectionSelect(); updateProgress();
     show('app');
   }
-  document.getElementById('s-tag-input').addEventListener('keydown', e => { if (e.key==='Enter'){e.preventDefault();addTag();} });
   document.getElementById('new-item-name').addEventListener('keydown', e => { if (e.key==='Enter') addItem(); });
   document.getElementById('new-section-name').addEventListener('keydown', e => { if(e.key==='Enter') confirmAddSection(); if(e.key==='Escape') closeAddSection(); });
   document.getElementById('sectionModal').addEventListener('click', e => { if(e.target===document.getElementById('sectionModal')) closeAddSection(); });
