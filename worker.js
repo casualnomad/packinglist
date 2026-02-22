@@ -1,34 +1,24 @@
 // ============================================================
 //  Packing List — Cloudflare Worker API Proxy
+//  Called via Service Binding from Pages Function only.
 // ============================================================
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
 export default {
   async fetch(request, env) {
 
-    // ── CORS preflight — must be first ──
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders });
-    }
-
-    // ── Origin check ──
-    const allowedOrigins = [
-      'ENTERURLOFHOMEPAGEHERE', // TODO: replace with actual homepage URL before deploy
-    ];
+    // ── Block all direct external requests ──
+    // This Worker is only reachable via Service Binding from the Pages Function.
+    // Any request arriving with an Origin header is coming directly from a browser
+    // and should be rejected.
     const origin = request.headers.get('Origin');
-    if (!allowedOrigins.includes(origin)) {
+    if (origin) {
       return new Response('Forbidden', { status: 403 });
     }
 
@@ -54,7 +44,7 @@ export default {
       return json({ error: 'ANTHROPIC_API_KEY not set in Worker environment variables' }, 500);
     }
 
-    // ── Parse request body — only once ──
+    // ── Parse request body ──
     let prompt;
     try {
       const body = await request.json();
