@@ -201,7 +201,7 @@
     <div class="setup-logo">🎒 PACKING LIST 👜</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
-    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github v1.0</a>
+    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github %%ENV%% v1.3</a>
 
     <div class="setup-field">
       <label>Destination / Trip Type</label>
@@ -479,9 +479,7 @@ async function generateList() {
 
   try {
     // 👇 Replace this URL with your Cloudflare Worker URL after deploying it
-    const WORKER_URL = 'https://cold-hat-479c.github-0b8.workers.dev';
-
-    const response = await fetch(WORKER_URL, {
+      const response = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: buildPrompt(tripMeta) })
@@ -493,8 +491,18 @@ async function generateList() {
     }
 
     const data = await response.json();
-    const raw = data.result.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(raw);
+    const raw = data.result
+        .replace(/```json|```/g, '')  // strip code fences
+        .replace(/^[^{]*/s, '')       // strip anything before the first {
+        .replace(/[^}]*$/s, '')       // strip anything after the last }
+        .trim();
+
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch(e) {
+        throw new Error('AI returned malformed JSON — please try generating again');
+      }
 
     advanceStep(5);
     await new Promise(r => setTimeout(r, 700));
