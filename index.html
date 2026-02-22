@@ -497,6 +497,10 @@ async function generateList() {
         .replace(/[^}]*$/s, '')       // strip anything after the last }
         .trim();
 
+    console.log('RAW AI RESPONSE:', data.result);  // 👈 add this
+    console.log('CLEANED:', raw);                   // 👈 and this
+
+
       let parsed;
       try {
         parsed = JSON.parse(raw);
