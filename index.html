@@ -15,7 +15,7 @@
     --red: #e84f4f; --text: #e8e4dc; --muted: #6b7280; --tag-bg: #252b38;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh;}
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-top: 44px; }
 
   /* ── SETUP ── */
   #setup-screen {
@@ -192,17 +192,17 @@
   }
 
   /* ── AUTH BAR ── */
-  .auth-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 50; white-space: nowrap; }
+  .auth-bar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; padding: 0 24px; z-index: 50; }
   .auth-sign-in { display: inline-flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.08); border: 1px solid rgba(244,166,34,0.22); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 13px; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
   .auth-sign-in:hover { background: rgba(244,166,34,0.16); border-color: rgba(244,166,34,0.45); }
-  .auth-pill { display: inline-flex; align-items: stretch; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 11px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-  .auth-pill-email { padding: 7px 12px; color: var(--muted); letter-spacing: 0.3px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; border-right: 1px solid var(--border); }
-  .auth-pill-link { padding: 7px 12px; color: var(--accent); text-decoration: none; cursor: pointer; transition: background 0.15s; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: center; }
-  .auth-pill-link:hover { background: rgba(244,166,34,0.1); }
+  .auth-pill { display: inline-flex; align-items: stretch; height: 44px; font-family: 'DM Mono', monospace; font-size: 11px; }
+  .auth-pill-email { padding: 0 16px; color: var(--muted); letter-spacing: 0.3px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; border-right: 1px solid var(--border); }
+  .auth-pill-link { padding: 0 16px; color: var(--accent); text-decoration: none; cursor: pointer; transition: background 0.15s; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: center; }
+  .auth-pill-link:hover { background: rgba(244,166,34,0.08); }
   .auth-pill-divider { width: 1px; background: var(--border); flex-shrink: 0; }
-  .auth-pill-signout { padding: 7px 11px; color: var(--muted); text-decoration: none; cursor: pointer; transition: background 0.15s, color 0.15s; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; }
-  .auth-pill-signout:hover { background: rgba(232,79,79,0.1); color: var(--red); }
-  @media (max-width: 600px) { .auth-pill-email { max-width: 90px; } .auth-bar { top: 10px; } }
+  .auth-pill-signout { padding: 0 16px; color: var(--muted); text-decoration: none; cursor: pointer; transition: background 0.15s, color 0.15s; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; }
+  .auth-pill-signout:hover { background: rgba(232,79,79,0.08); color: var(--red); }
+  @media (max-width: 600px) { .auth-pill-email { max-width: 100px; padding: 0 10px; } .auth-pill-link, .auth-pill-signout { padding: 0 10px; } }
 
   /* ── MY TRIPS SCREEN ── */
   #trips-screen { min-height: 100vh; padding: 64px 20px 40px; background: radial-gradient(ellipse at 30% 20%, rgba(244,166,34,0.06) 0%, transparent 60%); }
@@ -245,8 +245,7 @@
     <div class="setup-logo">🎒 PACKING LIST 👜</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
-    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github %%ENV%% v1.5.5</a>
-
+    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github %%ENV%% v1.6.7</a>
     <div class="setup-field">
       <label>Destination / Trip Type</label>
       <input type="text" id="s-destination" placeholder="e.g. Vietnam, Iceland, Morocco" maxlength="60">
