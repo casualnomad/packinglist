@@ -238,7 +238,7 @@
     <div class="setup-logo">🎒 PACKING LIST 👜</div>
     <div class="setup-sub">AI-powered trip planning</div>
     <div class="ai-badge">✦ Powered by Claude AI</div>
-    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github %%ENV%% v1.5.1</a>
+    <a  class="ai-badge" href="https://github.com/casualnomad/TheCasualNomad">Github %%ENV%% v1.5.2</a>
 
     <div class="setup-field">
       <label>Destination / Trip Type</label>
@@ -435,7 +435,7 @@
       <h3>Sign In</h3>
       <p class="auth-modal-desc">Enter your email and we'll send a magic sign-in link. No password needed.</p>
       <div class="auth-msg-error" id="auth-error"></div>
-      <input class="auth-email-input" type="email" id="auth-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')requestMagicLink()">
+      <input class="auth-email-input" type="text" autocomplete="email" id="auth-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')requestMagicLink()">
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
         <button class="btn" id="auth-send-btn" onclick="requestMagicLink()">Send Magic Link</button>
