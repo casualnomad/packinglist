@@ -49,13 +49,11 @@ export async function onRequestGet(context) {
     await env.DB.prepare('INSERT INTO users (id, email, created_at) VALUES (?, ?, ?)').bind(userId, email, now).run();
   }
 
-  // Create session in KV (30 days TTL)
+  // Create session in D1 (30 days, strongly consistent)
   const sessionId = crypto.randomUUID();
-  await env.AUTH_KV.put(
-    `session:${sessionId}`,
-    JSON.stringify({ email, userId }),
-    { expirationTtl: 2592000 }
-  );
+  await env.DB.prepare(
+    'INSERT INTO sessions (id, user_id, email, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
+  ).bind(sessionId, userId, email, now, now + 2592000).run();
 
   const isProd = new URL(env.APP_URL).protocol === 'https:';
   const cookieFlags = `HttpOnly; SameSite=Lax; Max-Age=2592000; Path=/${isProd ? '; Secure' : ''}`;
