@@ -192,7 +192,7 @@
   }
 
   /* ── AUTH BAR ── */
-  .auth-bar { position: fixed; top: 14px; right: 16px; z-index: 50; }
+  .auth-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 50; white-space: nowrap; }
   .auth-sign-in { display: inline-flex; align-items: center; gap: 6px; background: rgba(244,166,34,0.08); border: 1px solid rgba(244,166,34,0.22); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 13px; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
   .auth-sign-in:hover { background: rgba(244,166,34,0.16); border-color: rgba(244,166,34,0.45); }
   .auth-pill { display: inline-flex; align-items: stretch; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 11px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
@@ -202,7 +202,7 @@
   .auth-pill-divider { width: 1px; background: var(--border); flex-shrink: 0; }
   .auth-pill-signout { padding: 7px 11px; color: var(--muted); text-decoration: none; cursor: pointer; transition: background 0.15s, color 0.15s; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; }
   .auth-pill-signout:hover { background: rgba(232,79,79,0.1); color: var(--red); }
-  @media (max-width: 600px) { .auth-pill-email { max-width: 100px; } .auth-bar { top: 10px; right: 10px; } }
+  @media (max-width: 600px) { .auth-pill-email { max-width: 90px; } .auth-bar { top: 10px; } }
 
   /* ── MY TRIPS SCREEN ── */
   #trips-screen { min-height: 100vh; padding: 64px 20px 40px; background: radial-gradient(ellipse at 30% 20%, rgba(244,166,34,0.06) 0%, transparent 60%); }
